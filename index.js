@@ -1,5 +1,8 @@
 // ==================== Importing Modules ====================
 
+const fetch = (...args) =>
+	import('node-fetch').then(({default: fetch}) => fetch(...args));
+
 // Include express framework to utilize network features
 const express = require("express");
 
@@ -63,6 +66,19 @@ const client = new MongoClient(uri, {
 // ==================== Web Server Processing ====================
 
 // Show index.ejs in GET request to root page
-app.get("/", (request, response) => {
-    response.render("index");
+app.get("/", (req, res) => {
+    res.render("index");
 });
+
+// Perform search for POST request to /search
+app.post("/search", (req, res) => {
+    const url = `https://api.umd.io/v1/courses/${req.body.class}`;
+
+    fetch(url)
+        .then((response) => response.json())
+        .then((json) => console.log(json));
+});
+
+// ==================== Functions ====================
+
+// function processClass()
