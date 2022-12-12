@@ -2,21 +2,30 @@
 
 body {
     font-family: sans-serif;
-    text-align: center;
     margin: 0;
 }
 
-h1 {
-    font-size: 2.5rem;
+.btn-primary {
+    background-color: #e21833;
+    border: 0;
+}
+
+.btn-primary:hover {
+    background-color: #ffd200;
+    color: black;
+    border: 0;
 }
 
 /* ======== index.html ======== */
 
-#nav {
+.navbar {
     background-color: #e21833;
+}
+
+.navbar-brand {
     color: white;
-    overflow: hidden;
-    margin: 0;
+    font-size: 2.5rem;
+    text-align: center;
 }
 
 #center-div {
@@ -27,9 +36,13 @@ h1 {
 
 .box {
     display: inline-block;
-    width: 32%;
+    width: 30%;
     height: 17rem;
     margin: 0 10px;
+}
+
+#testudo-img {
+    width: 300px;
 }
 
 #box1 {
