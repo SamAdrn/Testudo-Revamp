@@ -1,0 +1,45 @@
+/* ======== global ======== */
+
+body {
+    font-family: sans-serif;
+    text-align: center;
+    margin: 0;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+/* ======== index.html ======== */
+
+#nav {
+    background-color: #e21833;
+    color: white;
+    overflow: hidden;
+    margin: 0;
+}
+
+#center-div {
+    display: flex;
+    flex-direction: row;
+    margin: 30px 15px;
+}
+
+.box {
+    display: inline-block;
+    width: 32%;
+    height: 17rem;
+    margin: 0 10px;
+}
+
+#box1 {
+    background-color: red;
+}
+
+#box2 {
+    background-color: blue;
+}
+
+#box3 {
+    background-color: green;
+}
