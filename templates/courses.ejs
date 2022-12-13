@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../templates/partials/head') %>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <%- include('../templates/partials/navbar') %>
+
+    <!-- Sticky Button to open search sidebar (search-offcanvas)  -->
+    <div type="button" data-bs-toggle="offcanvas" data-bs-target="#search-offcanvas" aria-controls="offcanvasScrolling">
+        <i class="fa-solid fa-circle-chevron-right offcanvas-btn p-1 ms-3 sticky-top"></i>
+    </div>
+
+    <!-- Search Sidebar (search-offcanvas) -->
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
+        id="search-offcanvas" aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header">
+            <h3 class="offcanvas-title" id="offcanvasScrollingLabel">Search</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <!-- Search by Course ID Form -->
+            <form method="post" action="search" class="p-4 mb-3 border rounded">
+                <div class="row mb-3">
+                    <label for="class" class="col-sm-3 col-form-label">Course</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="class" placeholder="CMSC335" required>
+                    </div>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Course Cards Div -->
+    <div class="row row-cols-1 g-4 mx-4 my-3 cards-div">
+        
+        <%- courses %>
+
+    </div>
+
+</body>
+
+</html>
