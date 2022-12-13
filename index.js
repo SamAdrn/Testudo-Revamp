@@ -75,8 +75,6 @@ app.get("/", (req, res) => {
 app.post("/search", async (req, res) => {
     const url = `https://api.umd.io/v1/courses/${req.body.course}`;
 
-    let str = "";
-
     await fetch(url)
         .then((response) => response.json())
         .then(async function (json) {
@@ -88,17 +86,19 @@ app.post("/search", async (req, res) => {
                     .then((responseSect) => responseSect.json())
                     .then((jsonSect) => (sections = jsonSect));
 
-                str += processCourse(course, sections);
+                res.render("courses", {
+                    courses: processCourse(course, sections),
+                });
             }
-        });
-    res.render("courses", { courses: str });
+        })
+        .catch((error) => res.render("error", {url: url, error: error}));
 });
 
 // ==================== Functions ====================
 
 function processCourse(course, sections) {
-
-    let str = '<div class="card p-2">' +
+    let str =
+        '<div class="card p-2">' +
         '<div class="card-body row g-0">' +
         '<div class="col-2">' +
         `<h2>${course.course_id}</h2>` +
@@ -108,11 +108,13 @@ function processCourse(course, sections) {
         (course.relationships.also_offered_as
             ? `<i class="text-muted d-block my-3">Also Offered As:<br>${course.relationships.also_offered_as}</i>`
             : "") +
-        '</div>' +
+        "</div>" +
         '<div class="col-8 pe-5 ps-5">' +
         `<h3 class="card-title mb-4">${course.name}</h3>` +
-        '<hr>' +
-        `<p><strong>Grading Method:</strong> ${course.grading_method.join(", ")}</p>` +
+        "<hr>" +
+        `<p><strong>Grading Method:</strong> ${course.grading_method.join(
+            ", "
+        )}</p>` +
         (course.relationships.credit_granted_for
             ? `<p><strong>Credit Granted For:</strong> ${course.relationships.credit_granted_for}</p>`
             : "") +
@@ -128,38 +130,38 @@ function processCourse(course, sections) {
         (course.relationships.additional_info
             ? `<p><strong>Additional Info:</strong> ${course.relationships.additional_info}</p>`
             : "") +
-        '</div>' +
+        "</div>" +
         '<div class="col-2">' +
         '<div class="row mb-2">' +
         `<h5><strong>Credits:</strong> ${course.credits}</h5>` +
-        '</div>' +
+        "</div>" +
         (course.gen_ed.length === 0
             ? ""
             : '<div class="row my-2">' +
-                `<h5><strong>Gen-Ed:</strong> ${course.gen_ed.join(", ")}</h5>` +
-                '</div>') +
+              `<h5><strong>Gen-Ed:</strong> ${course.gen_ed.join(", ")}</h5>` +
+              "</div>") +
         (course.core.length === 0
             ? ""
             : '<div class="row my-2">' +
-                `<h5><strong>Core:</strong> ${course.core.join(", ")}</h5>` +
-                '</div>') +
-        '</div>' +
-        '</div>' +
+              `<h5><strong>Core:</strong> ${course.core.join(", ")}</h5>` +
+              "</div>") +
+        "</div>" +
+        "</div>" +
         '<div class="row p-2">' +
         '<div class="col-2">' +
-        '<h4>Course Description</h4>' +
-        '</div>' +
+        "<h4>Course Description</h4>" +
+        "</div>" +
         '<div class="col-10 pe-5 ps-5">' +
         `<p>${course.description}</p>` +
-        '</div>' +
-        '</div>' +
+        "</div>" +
+        "</div>" +
         '<div class="accordion" id="course-accordion">' +
         '<div class="accordion-item">' +
         '<h2 class="accordion-header" id="sections">' +
         '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-sect" aria-expanded="false" aria-controls="flush-sect">' +
         '<h5 class="m-0">Sections</h5>' +
-        '</button>' +
-        '</h2>' +
+        "</button>" +
+        "</h2>" +
         '<div id="flush-sect" class="accordion-collapse collapse" aria-labelledby="sections" data-bs-parent="#course-accordion">' +
         '<div class="accordion-body">';
 
@@ -167,34 +169,40 @@ function processCourse(course, sections) {
 
     for (let section of sections) {
         i += 1;
-        str += '<div class="row g-0 p-3 ' +
-            (section.open_seats < 1 ? 'section-full' : 'section-open') + '"' +
-            (i % 2 === 0 ? 'style="background-color: #F8F9FA;"' : '') + '>' +
+        str +=
+            '<div class="row g-0 p-3 ' +
+            (section.open_seats < 1 ? "section-full" : "section-open") +
+            '"' +
+            (i % 2 === 0 ? 'style="background-color: #F8F9FA;"' : "") +
+            ">" +
             '<div class="col-1">' +
             `<h6>${section.number}</h6>` +
-            '</div>' +
+            "</div>" +
             '<div class="col-5">' +
             `<h4>${section.instructors.join(", ")}</h4>` +
             `<h6>Seats Available: ${section.open_seats}/${section.seats}` +
-            (section.open_seats < 1 ? ` (${section.waitlist} in Waitlist)` : '') + '</h6>' +
-            '</div>' +
+            (section.open_seats < 1
+                ? ` (${section.waitlist} in Waitlist)`
+                : "") +
+            "</h6>" +
+            "</div>" +
             '<div class="col-6">';
-        
-        section.meetings.forEach(meeting => { 
-            str += '<div class="row">' +
-                '<strong class="m-0 col-3">' + 
-                (meeting.classtype === '' ? 'Lecture' : 'Discussion') + 
-                ': </strong>' +
+
+        section.meetings.forEach((meeting) => {
+            str +=
+                '<div class="row">' +
+                '<strong class="m-0 col-3">' +
+                (meeting.classtype === "" ? "Lecture" : "Discussion") +
+                ": </strong>" +
                 '<p class="m-0 col-9">' +
                 `${meeting.building} ${meeting.room} (${meeting.days}: ${meeting.start_time} - ${meeting.end_time})</p>` +
-                '</div>';
+                "</div>";
         });
-            
-        
-        str += '</div></div>'
+
+        str += "</div></div>";
     }
 
-    str += '</div></div></div></div>'
+    str += "</div></div></div></div>";
 
     return str;
 }
