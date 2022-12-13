@@ -191,7 +191,7 @@
                     <p class="m-0 col-9">
                       <%- meeting.building %>
                       <%- meeting.room %>
-                      <% if (meeting.building !=="ONLINE" ) { %>
+                      <% if (meeting.days !=="" ) { %>
                       (<%- meeting.days %> : <%- meeting.start_time %> - <%- meeting.end_time %>)
                       <% } %>
                     </p>
