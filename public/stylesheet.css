@@ -85,3 +85,18 @@ body {
 .section-full {
     border-right: 20px solid #e63946;
 }
+
+/* ======== error.ejs ======== */
+
+#sad-testudo {
+    width: 20%;
+    margin: 20px;
+}
+
+pre code {
+    background-color: #eee;
+    border: 1px solid #999;
+    display: block;
+    padding: 20px;
+    text-align: left;
+}
