@@ -1,7 +1,6 @@
 /* ======== global ======== */
 
 body {
-    font-family: sans-serif;
     margin: 0;
 }
 
@@ -16,7 +15,13 @@ body {
     border: 0;
 }
 
-/* ======== index.html ======== */
+.btn-primary:active {
+    background-color: white;
+    color: black;
+    border: 0;
+}
+
+/* ======== index.ejs ======== */
 
 .navbar {
     background-color: #e21833;
@@ -55,4 +60,28 @@ body {
 
 #box3 {
     background-color: green;
+}
+
+/* ======== search.ejs ======== */
+
+.offcanvas-btn {
+    top: 50%;
+    position: fixed;
+    font-size: 3rem;
+}
+
+.offcanvas-btn:hover {
+    color: #ffd200;
+}
+
+.cards-div {
+    margin-left: 2rem;
+}
+
+.section-open {
+    border-right: 20px solid #06d6a0;
+}
+
+.section-full {
+    border-right: 20px solid #e63946;
 }
