@@ -2,47 +2,223 @@
 <html lang="en">
 
 <head>
-    <%- include('../templates/partials/head') %>
+  <%- include('../templates/partials/head') %>
 </head>
 
 <body>
-    <!-- Navbar -->
-    <%- include('../templates/partials/navbar') %>
+  <!-- Navbar -->
+  <%- include('../templates/partials/navbar') %>
 
-    <!-- Sticky Button to open search sidebar (search-offcanvas)  -->
-    <div type="button" data-bs-toggle="offcanvas" data-bs-target="#search-offcanvas" aria-controls="offcanvasScrolling">
-        <i class="fa-solid fa-circle-chevron-right offcanvas-btn p-1 ms-3 sticky-top"></i>
+  <!-- Sticky Button to open search sidebar (search-offcanvas)  -->
+  <div type="button" data-bs-toggle="offcanvas" data-bs-target="#search-offcanvas" aria-controls="offcanvasScrolling">
+    <i class="fa-solid fa-circle-chevron-right offcanvas-btn p-1 ms-3 sticky-top"></i>
+  </div>
+
+  <!-- Search Sidebar (search-offcanvas) -->
+  <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="search-offcanvas" aria-labelledby="offcanvasScrollingLabel">
+    <div class="offcanvas-header">
+      <h3 class="offcanvas-title" id="offcanvasScrollingLabel">Search</h3>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-
-    <!-- Search Sidebar (search-offcanvas) -->
-    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
-        id="search-offcanvas" aria-labelledby="offcanvasScrollingLabel">
-        <div class="offcanvas-header">
-            <h3 class="offcanvas-title" id="offcanvasScrollingLabel">Search</h3>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <div class="offcanvas-body">
+      <!-- Search by Course ID Form -->
+      <form method="post" action="search" class="p-4 mb-3 border rounded">
+        <div class="row mb-3">
+          <label for="class" class="col-sm-3 col-form-label">Course</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" name="course" placeholder="CMSC335" required>
+          </div>
         </div>
-        <div class="offcanvas-body">
-            <!-- Search by Course ID Form -->
-            <form method="post" action="search" class="p-4 mb-3 border rounded">
-                <div class="row mb-3">
-                    <label for="class" class="col-sm-3 col-form-label">Course</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" name="course" placeholder="CMSC335" required>
-                    </div>
-                </div>
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </div>
-            </form>
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary">Search</button>
         </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Course Cards Div -->
+  <div class="row row-cols-1 g-4 mx-4 my-3 cards-div">
+
+    <% (function(courses, sections) { %>
+
+    <% let i=0 /* Counter to access sections */ %>
+    <% for (let course of courses) { %>
+
+    <div class="card p-2">
+
+      <!-- Course Card Body -->
+      <div class="card-body row g-0">
+
+        <!-- Course ID and other Naming Information (LEFT) -->
+        <div class="col-2">
+          <!-- Course ID -->
+          <h2><%- course.course_id %></h2>
+          <!-- Formerly: -->
+          <% if (course.relationships.formerly) { %>
+          <i class="text-muted d-block my-3">Formerly:<br>
+            <%- course.relationships.formerly %></i>
+          <% }%>
+          <!-- Also Offered As: -->
+          <% if (course.relationships.also_offered_as) { %>
+          <i class="text-muted d-block my-3">Also Offered As:<br>
+            <%- course.relationships.also_offered_as %></i>
+          <% }%>
+        </div>
+
+        <!-- Course Title and Other Available Attributes (MIDDLE) -->
+        <div class="col-8 pe-5 ps-5">
+          <!-- Course Name -->
+          <h3 class="card-title mb-4"><%- course.name %></h3>
+          <hr>
+          <!-- Grading Method: -->
+          <p><strong>Grading Method:</strong> <%- course.grading_method.join(", ") %> </p>
+          <!-- Credit Granted For: -->
+          <% if (course.relationships.credit_granted_for) { %>
+          <p><strong>Credit Granted For:</strong> <%- course.relationships.credit_granted_for %> </p>
+          <% }%>
+          <!-- Pre-requisites: -->
+          <% if (course.relationships.prereqs) { %>
+          <p><strong>Pre-requisites:</strong> <%- course.relationships.prereqs %> </p>
+          <% }%>
+          <!-- Co-requisites: -->
+          <% if (course.relationships.coreqs) { %>
+          <p><strong>Co-requisites:</strong> <%- course.relationships.coreqs %> </p>
+          <% }%>
+          <!-- Restrictions: -->
+          <% if (course.relationships.restrictions) { %>
+          <p><strong>Restrictions:</strong> <%- course.relationships.restrictions %> </p>
+          <% }%>
+          <!-- Additional Info: -->
+          <% if (course.relationships.additional_info) { %>
+          <p><strong>Additional Info:</strong> <%- course.relationships.additional_info %> </p>
+          <% }%>
+        </div>
+
+        <!-- Course Misc (RIGHT) -->
+        <div class=" col-2">
+          <!-- Credits: -->
+          <div class="row mb-2">
+            <h5><strong>Credits:</strong> <%- course.credits %> </h5>
+          </div>
+          <!-- Gen-Ed: -->
+          <% if (course.gen_ed.length !==0) { %>
+          <div class="row my-2">
+            <h5><strong>Gen-Ed:</strong> <%- course.gen_ed.join(", ") %> </h5>
+          </div>
+          <% }%>
+          <!-- Core: -->
+          <% if (course.core.length !== 0) { %>
+          <div class=" row my-2">
+            <h5><strong>Core:</strong> <%- course.core.join(", ") %> </h5>
+          </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Course Description in a New div -->
+      <div class=" row p-2">
+        <div class="col-2">
+          <h4>Course Description</h4>
+        </div>
+        <div class="col-10 pe-5 ps-5">
+          <p> <%- course.description %> </p>
+        </div>
+      </div>
+
+      <!-- Accordion to Display Section Information -->
+      <div class="accordion" id="course-accordion">
+
+        <!-- Accordion Button to open Sections Div -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="sections">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-sect" aria-expanded="false" aria-controls="flush-sect">
+              <h5 class="m-0">Sections</h5>
+            </button>
+          </h2>
+
+          <!-- Sections Div -->
+          <div id="flush-sect" class="accordion-collapse collapse" aria-labelledby="sections" data-bs-parent="#course-accordion">
+            <div class="accordion-body">
+
+              <% let j = 0 // to keep track of color coding section blocks %> 
+
+              <% for (let section of sections[i]) { %>
+
+              <% j++ %> 
+
+              <!-- Section (along with color code depending on open seats) -->
+              <div class="row g-0 p-3  
+                                        <% if (section.open_seats < 1) { %>
+                                            section-full
+                                        <% } else { %>
+                                            section-open
+                                        <% } %> 
+                                        "
+                                        <% if (j % 2 === 0) { %>
+                                          style='background-color: #F8F9FA;'
+                                        <% } %>
+                                        >
+
+                <!-- Section Number -->
+                <div class="col-1">
+                  <h6><%- section.number %> </h6>
+                </div>
+
+                <!-- Instructor Information and Seating Availability -->
+                <div class="col-5">
+                  <h4><%- section.instructors.join(", ") %> </h4>
+                  <h6>Seats Available: <%- section.open_seats %>/<%- section.seats %>
+                    <% if (section.open_seats < 1) { %>
+                    (<%- section.waitlist %> in Waitlist)
+                    <% }%>
+                  </h6>
+                </div>
+
+                <!-- Meetings Div -->
+                <div class=" col-6">
+
+                  <% section.meetings.forEach((meeting) => { %>
+
+                  <!-- Meeting Information -->
+                  <div class="row">
+                    <strong class="m-0 col-3">
+                      <% if (meeting.classtype === "") { %>
+                      Lecture:
+                      <% } else { %>
+                      Discussion:
+                      <% } %>
+                    </strong>
+                    <p class="m-0 col-9">
+                      <%- meeting.building %>
+                      <%- meeting.room %>
+                      <% if (meeting.building !=="ONLINE" ) { %>
+                      (<%- meeting.days %> : <%- meeting.start_time %> - <%- meeting.end_time %>)
+                      <% } %>
+                    </p>
+                  </div>
+                  <% }) %>
+
+                </div>
+
+              </div>
+
+              <% } %>
+              <% i++; %>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
 
-    <!-- Course Cards Div -->
-    <div class="row row-cols-1 g-4 mx-4 my-3 cards-div">
-        
-        <%- courses %>
+    <% } %>
+    <% })(courses, sections) %>
 
-    </div>
+  </div>
 
 </body>
 
