@@ -67,6 +67,10 @@ body {
     background-color: green;
 }
 
+.cards-div {
+    margin-left: 2rem;
+}
+
 /* ======== search.ejs ======== */
 
 .offcanvas-btn {
@@ -77,10 +81,6 @@ body {
 
 .offcanvas-btn:hover {
     color: #ffd200;
-}
-
-.cards-div {
-    margin-left: 2rem;
 }
 
 .section-open {
