@@ -78,15 +78,36 @@ app.get("/", (req, res) => {
 
 // Perform search for POST request to /search
 app.post("/search", async (req, res) => {
-    const url = `https://api.umd.io/v1/courses/${req.body.course}`;
+    // Get Favorite Courses
+    let result;
+    try {
+        await client.connect();
 
+        const cursor = client
+            .db(mongo.dbName)
+            .collection(mongo.collection)
+            .find({ course: req.body.course });
+
+        result = await cursor.toArray();
+    } catch (e) {
+        console.log(e);
+    } finally {
+        await client.close();
+    }
+
+    console.log(result);
+
+    // Retrieve courses from API and render them onto courses.ejs
+    const url = `https://api.umd.io/v1/courses/${req.body.course}`;
     await fetch(url)
         .then((response) => response.json())
         .then(async function (json) {
             let sectionsArr = [];
 
             for (let course of json) {
-                const urlSect = `https://api.umd.io/v1/courses/sections?course_id=${course.course_id}&per_page=100`;
+                const urlSect =
+                    "https://api.umd.io/v1/courses/sections?" +
+                    `course_id=${course.course_id}&per_page=100&sort=section_id`;
 
                 await fetch(urlSect)
                     .then((responseSect) => responseSect.json())
@@ -95,6 +116,7 @@ app.post("/search", async (req, res) => {
             res.render("courses", {
                 courses: json,
                 sections: sectionsArr,
+                favorites: result,
             });
         })
         .catch((error) => res.render("error", { url: url, error: error }));
@@ -112,7 +134,11 @@ app.post("/fav", async (req, res) => {
             await client
                 .db(mongo.dbName)
                 .collection(mongo.collection)
-                .insertOne({ course: cse[0], section: cse[1] });
+                .insertOne({
+                    course: cse[0],
+                    section: cse[1],
+                    department: cse[0].slice(0, 4),
+                });
         } else {
             // Remove from Favorites
             await client
@@ -130,7 +156,8 @@ app.post("/fav", async (req, res) => {
 });
 
 app.get("/favorites", async (req, res) => {
-    let result, favArr = [];
+    let result,
+        favArr = [];
 
     try {
         await client.connect();
@@ -147,18 +174,34 @@ app.get("/favorites", async (req, res) => {
         await client.close();
     }
 
-    await Promise.all(result.map(async (cse) => {
-        const url = `https://api.umd.io/v1/courses/sections/${cse.course}-${cse.section}`;
-        await fetch(url)
-            .then((response) => response.json())
-            .then((json) => favArr.push(json[0]))
-            .catch((error) => res.render("error", { url: url, error: error }));
-    }))
+    await Promise.all(
+        result.map(async (cse) => {
+            const url =
+                "https://api.umd.io/v1/courses/sections/" +
+                `${cse.course}-${cse.section}`;
+            await fetch(url)
+                .then((response) => response.json())
+                .then((json) => favArr.push(json[0]))
+                .catch((error) =>
+                    res.render("error", { url: url, error: error })
+                );
+        })
+    );
+
+    favArr.sort((x, y) => {
+        let dept = x.course.slice(0, 4).localeCompare(y.course.slice(0, 4));
+        let cse = dept === 0 
+            ? x.course.slice(4).localeCompare(y.course.slice(4)) 
+            : dept;
+        return cse === 0 
+            ? x.number.localeCompare(y.number) 
+            : cse;
+    });
 
     console.log("DONE===========");
     console.log(favArr);
 
-    res.render("favorites", {courses: favArr});
+    res.render("favorites", { courses: favArr });
 });
 
 // ==================== Functions ====================

@@ -208,7 +208,11 @@
                 <!-- Favorite Button -->
                 <div class="col-1 align-self-center">
                   <button class="fav-button">
-                    <i class="fa-solid fa-star fav-star" onclick="handleFav(this, 'id=<%- section.section_id %>')"></i>
+                    <i class="fa-solid fa-star fav-star 
+                    <% if (favorites.some((c) => (c.course === course.course_id && c.section === section.number))) { %>
+                      fav-checked
+                    <% } %> 
+                    " onclick="handleFav(this, 'id=<%- section.section_id %>')"></i>
                   </button>
                 </div>
 
