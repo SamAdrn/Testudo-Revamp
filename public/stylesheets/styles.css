@@ -21,6 +21,11 @@ body {
     border: 0;
 }
 
+.nav-link {
+    font-size: 1.2rem;
+    color: white;
+}
+
 /* ======== index.ejs ======== */
 
 .navbar {
@@ -84,6 +89,20 @@ body {
 
 .section-full {
     border-right: 20px solid #e63946;
+}
+
+.fav-star {
+    font-size: 1.5rem;
+    color: gray;
+}
+
+.fav-checked {
+    color: #ffd200;
+}
+
+.fav-button {
+    background-color: transparent;
+    border: 0;
 }
 
 /* ======== error.ejs ======== */
