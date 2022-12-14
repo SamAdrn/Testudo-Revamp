@@ -12,6 +12,9 @@ const path = require("path");
 // Include body-parser to parse URL encoded data
 const bodyParser = require("body-parser");
 
+// Include serve-favicon middleware
+const favicon = require("serve-favicon");
+
 // Import credentials environment file
 require("dotenv").config({ path: path.resolve(__dirname, "credentials/.env") });
 
@@ -30,6 +33,9 @@ app.use(express.static("public"));
 // Set up Express to use body parser
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// Add a favicon (STILL NOT WORKING)
+app.use(favicon(path.join(__dirname, "public", "media", "favicon.ico")));
+
 // Initialize command line
 process.stdin.setEncoding("utf8");
 
@@ -44,7 +50,6 @@ console.log(`Web server started and running at http://localhost:${portNumber}`);
 
 // Include the MongoDB driver for Node.js
 const { MongoClient, ServerApiVersion } = require("mongodb");
-const { json } = require("body-parser");
 
 /* Object to store details related to our databse */
 const mongo = {
@@ -79,21 +84,81 @@ app.post("/search", async (req, res) => {
         .then((response) => response.json())
         .then(async function (json) {
             let sectionsArr = [];
-            
+
             for (let course of json) {
                 const urlSect = `https://api.umd.io/v1/courses/sections?course_id=${course.course_id}&per_page=100`;
 
                 await fetch(urlSect)
                     .then((responseSect) => responseSect.json())
-                    .then((jsonSect) => (sectionsArr.push(jsonSect)));
+                    .then((jsonSect) => sectionsArr.push(jsonSect));
             }
             res.render("courses", {
-                courses: json, sections: sectionsArr
+                courses: json,
+                sections: sectionsArr,
             });
         })
-        .catch((error) => res.render("error", {url: url, error: error}));
+        .catch((error) => res.render("error", { url: url, error: error }));
+});
+
+// Handle adding course sections to favorites
+app.post("/fav", async (req, res) => {
+    const cse = req.body.id.split("-");
+
+    try {
+        await client.connect();
+
+        if (req.body.act === "add") {
+            // Add to Favorites
+            await client
+                .db(mongo.dbName)
+                .collection(mongo.collection)
+                .insertOne({ course: cse[0], section: cse[1] });
+        } else {
+            // Remove from Favorites
+            await client
+                .db(mongo.dbName)
+                .collection(mongo.collection)
+                .deleteOne({ course: cse[0], section: cse[1] });
+        }
+    } catch (e) {
+        console.log(e);
+    } finally {
+        await client.close();
+    }
+
+    res.end();
+});
+
+app.get("/favorites", async (req, res) => {
+    let result, favArr = [];
+
+    try {
+        await client.connect();
+
+        const cursor = client
+            .db(mongo.dbName)
+            .collection(mongo.collection)
+            .find();
+
+        result = await cursor.toArray();
+    } catch (e) {
+        console.log(e);
+    } finally {
+        await client.close();
+    }
+
+    await Promise.all(result.map(async (cse) => {
+        const url = `https://api.umd.io/v1/courses/sections/${cse.course}-${cse.section}`;
+        await fetch(url)
+            .then((response) => response.json())
+            .then((json) => favArr.push(json[0]))
+            .catch((error) => res.render("error", { url: url, error: error }));
+    }))
+
+    console.log("DONE===========");
+    console.log(favArr);
+
+    res.render("favorites", {courses: favArr});
 });
 
 // ==================== Functions ====================
-
-

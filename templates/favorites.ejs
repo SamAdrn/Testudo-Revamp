@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('partials/head') %>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <%- include('partials/navbar') %>
+
+  <div class="text-center m-5">
+    <h1>Favorited Courses</h1>
+  </div>
+
+  <div class="cards-div m-5">
+
+    <% for (let course of courses) { %>
+
+    <!-- Start of Course Card (and determine whether it is full or open)  -->
+    <div class="card m-3
+    <% if (course.open_seats < 1) { %>
+        section-full
+    <% } else { %>
+        section-open
+    <% } %> ">
+
+      <div class="card-body">
+        <div class="row">
+
+          <!-- Course and Instructor Information -->
+          <div class="col-3 align-self-center">
+            <h3 class="card-title d-inline"><%- course.course %> &mdash; </h3>
+            <h5 class="card-subtitle d-inline"> <%- course.number %> </h5>
+            <p class="fs-5 mb-0 mt-2"><%- course.instructors.join(",<br>") %></p>
+          </div>
+
+          <!-- Meetings Div -->
+          <div class="col-5 ps-3 align-self-center">
+
+            <% course.meetings.forEach((meeting) => { %>
+
+            <!-- Meeting Information -->
+            <div class="row">
+              <strong class="m-0 col-3 fs-5">
+                <% if (meeting.classtype === "") { %>
+                Lecture:
+                <% } else { %>
+                Discussion:
+                <% } %>
+              </strong>
+              <p class="m-0 col-9 fs-5">
+                <%- meeting.building %>
+                <%- meeting.room %>
+                <% if (meeting.days !=="" ) { %>
+                (<%- meeting.days %> : <%- meeting.start_time %> - <%- meeting.end_time %>)
+                <% } %>
+              </p>
+            </div>
+
+            <% }) %>
+
+          </div>
+
+          <!-- Seating Information -->
+          <div class="col-3 ps-3 align-self-center">
+            <h6>Seats Available:</h6>
+            <h4 class="d-inline"> <%- course.open_seats %> / <%- course.seats %></h4>
+            <% if (course.open_seats < 1) { %>
+            &nbsp;&nbsp;<h5 class="d-inline">(<%- course.waitlist %> in Waitlist)</h5>
+            <% }%>
+          </div>
+
+          <!-- Favorite Button -->
+          <div class="col-1 align-self-center">
+            <button class="fav-button">
+              <i class="fa-solid fa-star fav-star fav-checked" onclick="handleFav(this, 'id=<%- course.section_id %>')"></i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <% } %>
+
+  </div>
+
+  <script src="scripts/favorites.js"></script>
+
+</body>
+
+</html>

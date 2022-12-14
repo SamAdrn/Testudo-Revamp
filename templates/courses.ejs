@@ -2,12 +2,16 @@
 <html lang="en">
 
 <head>
-  <%- include('../templates/partials/head') %>
+  <%- include('partials/head') %>
 </head>
 
 <body>
   <!-- Navbar -->
-  <%- include('../templates/partials/navbar') %>
+  <%- include('partials/navbar') %>
+
+  <div class="text-center m-5">
+    <h1>Search Results</h1>
+  </div>
 
   <!-- Sticky Button to open search sidebar (search-offcanvas)  -->
   <div type="button" data-bs-toggle="offcanvas" data-bs-target="#search-offcanvas" aria-controls="offcanvasScrolling">
@@ -21,6 +25,7 @@
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
+
       <!-- Search by Course ID Form -->
       <form method="post" action="search" class="p-4 mb-3 border rounded">
         <div class="row mb-3">
@@ -33,13 +38,13 @@
           <button type="submit" class="btn btn-primary">Search</button>
         </div>
       </form>
+
     </div>
   </div>
 
   <!-- Course Cards Div -->
   <div class="row row-cols-1 g-4 mx-4 my-3 cards-div">
 
-    <% (function(courses, sections) { %>
 
     <% let i=0 /* Counter to access sections */ %>
     <% for (let course of courses) { %>
@@ -116,8 +121,8 @@
       </div>
 
       <!-- Course Description in a New div -->
-      <div class=" row p-2">
-        <div class="col-2">
+      <div class="row p-2">
+        <div class="col-2 ps-4">
           <h4>Course Description</h4>
         </div>
         <div class="col-10 pe-5 ps-5">
@@ -140,37 +145,33 @@
           <div id="flush-sect" class="accordion-collapse collapse" aria-labelledby="sections" data-bs-parent="#course-accordion">
             <div class="accordion-body">
 
-              <% let j = 0 // to keep track of color coding section blocks %> 
+              <% let j = 0 // to keep track of color coding section blocks %>
 
               <% for (let section of sections[i]) { %>
 
-              <% j++ %> 
+              <% j++ %>
 
               <!-- Section (along with color code depending on open seats) -->
               <div class="row g-0 p-3  
-                                        <% if (section.open_seats < 1) { %>
-                                            section-full
-                                        <% } else { %>
-                                            section-open
-                                        <% } %> 
-                                        "
-                                        <% if (j % 2 === 0) { %>
-                                          style='background-color: #F8F9FA;'
-                                        <% } %>
-                                        >
+              <% if (section.open_seats < 1) { %>
+                section-full
+              <% } else { %>
+                section-open
+              <% } %> 
+              " <% if (j % 2 === 0) { %> style='background-color: #F8F9FA;' <% } %>>
 
                 <!-- Section Number -->
-                <div class="col-1">
+                <div class="col-1 align-self-center">
                   <h6><%- section.number %> </h6>
                 </div>
 
                 <!-- Instructor Information -->
-                <div class="col-3 ps-3">
+                <div class="col-3 ps-3 align-self-center">
                   <h4><%- section.instructors.join(",<br>") %> </h4>
                 </div>
 
                 <!-- Meetings Div -->
-                <div class="col-5 ps-3">
+                <div class="col-4 ps-3 align-self-center">
 
                   <% section.meetings.forEach((meeting) => { %>
 
@@ -196,12 +197,19 @@
                 </div>
 
                 <!-- Seating Information -->
-                <div class="col-3 ps-3">
+                <div class="col-3 ps-3 align-self-center">
                   <h6>Seats Available:</h6>
-                  <h3 class="d-inline"> <%- section.open_seats %> / <%- section.seats %></h3>
+                  <h4 class="d-inline"> <%- section.open_seats %> / <%- section.seats %></h4>
                   <% if (section.open_seats < 1) { %>
-                    &nbsp;&nbsp;<h5 class="d-inline">(<%- section.waitlist %> in Waitlist)</h5>
+                  &nbsp;&nbsp;<h5 class="d-inline">(<%- section.waitlist %> in Waitlist)</h5>
                   <% }%>
+                </div>
+
+                <!-- Favorite Button -->
+                <div class="col-1 align-self-center">
+                  <button class="fav-button">
+                    <i class="fa-solid fa-star fav-star" onclick="handleFav(this, 'id=<%- section.section_id %>')"></i>
+                  </button>
                 </div>
 
               </div>
@@ -220,9 +228,10 @@
     </div>
 
     <% } %>
-    <% })(courses, sections) %>
 
   </div>
+
+  <script src="scripts/favorites.js"></script>
 
 </body>
 
