@@ -24,6 +24,7 @@
     "fetch": "^1.1.0",
     "mongodb": "^4.12.1",
     "node-fetch": "^3.3.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "serve-favicon": "^2.5.0"
   }
 }
