@@ -77,6 +77,8 @@ And of course, to the people that collaborated into this project:
 
 3. Home page is very icky right now.
 
+4. Course search results may display sections in a very weird order. Will implement sorting on this in the future.
+
 ---
 
 > Written [12/14/2022]
