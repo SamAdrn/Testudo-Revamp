@@ -63,7 +63,7 @@ And of course, to the people that collaborated into this project:
 - [Samuel A. Kosasih](https://github.com/SamAdrn)
 - [Nathan Bezualem](https://github.com/nathanb9)
 - [Rose Griffin](https://github.com/rosegriffin)
-- [Alex](https://github.com/vladodio)
+- [Alex Ortunio](https://github.com/vladodio)
 
 [Bootstrap v5.2](https://getbootstrap.com/) was used to create this design, and [MongoDB](https://www.mongodb.com/home) as a back-end database.
 
