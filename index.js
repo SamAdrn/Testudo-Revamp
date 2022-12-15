@@ -95,14 +95,13 @@ app.post("/search", async (req, res) => {
         await client.close();
     }
 
-    console.log(result);
-
     // Retrieve courses from API and render them onto courses.ejs
     const url = `https://api.umd.io/v1/courses/${req.body.course}`;
     await fetch(url)
         .then((response) => response.json())
         .then(async function (json) {
-            let sectionsArr = [];
+            let sectionsArr = [],
+                i = 0;
 
             for (let course of json) {
                 const urlSect =
@@ -112,7 +111,12 @@ app.post("/search", async (req, res) => {
                 await fetch(urlSect)
                     .then((responseSect) => responseSect.json())
                     .then((jsonSect) => sectionsArr.push(jsonSect));
+
+                sectionsArr[i++].sort((x, y) =>
+                    x.number.localeCompare(y.number)
+                );
             }
+
             res.render("courses", {
                 courses: json,
                 sections: sectionsArr,
@@ -155,10 +159,12 @@ app.post("/fav", async (req, res) => {
     res.end();
 });
 
+// Handle GET Request to /favorites
 app.get("/favorites", async (req, res) => {
     let result,
         favArr = [];
 
+    // Obtain all favorite courses
     try {
         await client.connect();
 
@@ -174,6 +180,7 @@ app.get("/favorites", async (req, res) => {
         await client.close();
     }
 
+    // Convert all favorite courses to course objects through the API
     await Promise.all(
         result.map(async (cse) => {
             const url =
@@ -188,19 +195,17 @@ app.get("/favorites", async (req, res) => {
         })
     );
 
+    // Sort favorite courses by DEPT -> COURSE_ID -> SECTION
     favArr.sort((x, y) => {
         let dept = x.course.slice(0, 4).localeCompare(y.course.slice(0, 4));
-        let cse = dept === 0 
-            ? x.course.slice(4).localeCompare(y.course.slice(4)) 
-            : dept;
-        return cse === 0 
-            ? x.number.localeCompare(y.number) 
-            : cse;
+        let cse =
+            dept === 0
+                ? x.course.slice(4).localeCompare(y.course.slice(4))
+                : dept;
+        return cse === 0 ? x.number.localeCompare(y.number) : cse;
     });
 
-    console.log("DONE===========");
-    console.log(favArr);
-
+    // Render favorite courses
     res.render("favorites", { courses: favArr });
 });
 
