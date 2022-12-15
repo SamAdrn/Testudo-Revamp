@@ -75,6 +75,8 @@ And of course, to the people that collaborated into this project:
 
 2. The time it takes for a course to be saved may vary. At times, the star will turn gold as quick as `100`ms, but in others, it may take up to `78000`ms.
 
+3. Home page is very icky right now.
+
 ---
 
 > Written [12/14/2022]
