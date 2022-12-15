@@ -161,6 +161,8 @@ app.post("/fav", async (req, res) => {
 
 // Handle GET Request to /favorites
 app.get("/favorites", async (req, res) => {
+    console.log(req.socket.remoteAddress);
+
     let result,
         favArr = [];
 
