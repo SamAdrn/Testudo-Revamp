@@ -22,6 +22,8 @@ The server can be accessed at [localhost:3000](http://localhost:3000).
 
 <img src="public/screenshots/home-page.png" alt="Home Page" width="500">
 
+To view a demo of our project, check out this [YouTube Video](https://youtu.be/HxArLlzoiEo).
+
 The goal of this project is to make viewing class schedules a lot easier, with a new minimalistic design and additional tools to help make faster decisions for course registrations. This is a WIP, but so far, we've implemented some of the core functionalities, as described below:
 
 ---
@@ -60,8 +62,8 @@ This project would not be possible without [UMD.IO](https://beta.umd.io/)'s wond
 
 And of course, to the people that collaborated into this project:
 
-- [Samuel A. Kosasih](https://github.com/SamAdrn)
-- [Nathan Bezualem](https://github.com/nathanb9)
+- [Samuel A. Kosasih](https://github.com/SamAdrn) (samadrn)
+- [Nathan Bezualem](https://github.com/nathanb9) (nathanb9)
 - [Rose Griffin](https://github.com/rosegriffin)
 - [Alex Ortunio](https://github.com/vladodio)
 
