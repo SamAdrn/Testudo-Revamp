@@ -1,5 +1,9 @@
 # Testudo-Revamp
 
+## Accessing the Service Online
+
+We have deployed the web service using Render.com. You can visit us at [testudo2-0.onrender.com/](https://testudo2-0.onrender.com/).
+
 ## Running the Server Locally
 
 You are able to run this server locally on your computer using NodeJS. Start by extracting the contents of this file and run the following commmand within the directory.
