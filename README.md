@@ -2,7 +2,7 @@
 
 ## Accessing the Service Online
 
-We have deployed the web service using Render.com. You can visit us at [testudo2-0.onrender.com/](https://testudo2-0.onrender.com/).
+We have deployed the web service using Render.com. You can visit us at [testudo2-0.onrender.com/](https://testudo2-0.onrender.com).
 
 ## Running the Server Locally
 
