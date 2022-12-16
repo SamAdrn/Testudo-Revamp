@@ -22,7 +22,7 @@ The server can be accessed at [localhost:3000](http://localhost:3000).
 
 <img src="public/screenshots/home-page.png" alt="Home Page" width="500">
 
-To view a demo of our project, check out this [YouTube Video](https://youtu.be/HxArLlzoiEo).
+To view a live demo of our project, check out this [YouTube Video](https://youtu.be/HxArLlzoiEo).
 
 The goal of this project is to make viewing class schedules a lot easier, with a new minimalistic design and additional tools to help make faster decisions for course registrations. This is a WIP, but so far, we've implemented some of the core functionalities, as described below:
 
@@ -64,8 +64,8 @@ And of course, to the people that collaborated into this project:
 
 - [Samuel A. Kosasih](https://github.com/SamAdrn) (samadrn)
 - [Nathan Bezualem](https://github.com/nathanb9) (nathanb9)
-- [Rose Griffin](https://github.com/rosegriffin)
-- [Alex Ortunio](https://github.com/vladodio)
+- [Rose M. Griffin](https://github.com/rosegriffin) (rgriff68)
+- [Alexander A. Ortunio](https://github.com/vladodio) (aortunio)
 
 [Bootstrap v5.2](https://getbootstrap.com/) was used to create this design, and [MongoDB](https://www.mongodb.com/home) as a back-end database.
 
