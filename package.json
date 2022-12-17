@@ -2,7 +2,7 @@
   "name": "testudo-revamp",
   "version": "1.0.0",
   "description": "A revamped Class Schedule Viewer for Testudo",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/SamAdrn/Testudo-Revamp.git"
   },
-  "author": "",
+  "author": "Samuel Kosasih",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/SamAdrn/Testudo-Revamp/issues"
