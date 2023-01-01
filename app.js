@@ -59,6 +59,8 @@ const mongo = {
     pass: process.env.MONGO_DB_PASSWORD,
     dbName: process.env.MONGO_DB_NAME,
     collection: process.env.MONGO_COLLECTION,
+    savedCoursesCollection: process.env.MONGO_SAVED_COLLECTION,
+    dbSavedCourses: process.env.MONGO_SAVED_COURSES,
 };
 
 // Establish a connection to our database
@@ -229,8 +231,8 @@ function queryDatabaseForCourses() {
                 await client.connect();
 
                 await client
-                    .db(mongo.dbName)
-                    .collection(mongo.collection)
+                    .db(mongo.dbSavedCourses)
+                    .collection(mongo.savedCoursesCollection)
                     .insertMany(json);
                     // delete courses_for_partialsearch.json file
                     fs.unlinkSync('courses_for_partialsearch.json');
