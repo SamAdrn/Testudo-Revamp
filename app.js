@@ -8,8 +8,8 @@ const express = require("express");
 
 // Include node:path module to work with files and directory paths
 const path = require("path");
-// 
-const fs = require('fs');
+//
+const fs = require("fs");
 
 // Include body-parser to parse URL encoded data
 const bodyParser = require("body-parser");
@@ -58,9 +58,8 @@ const mongo = {
     user: process.env.MONGO_DB_USERNAME,
     pass: process.env.MONGO_DB_PASSWORD,
     dbName: process.env.MONGO_DB_NAME,
-    collection: process.env.MONGO_COLLECTION,
-    savedCoursesCollection: process.env.MONGO_SAVED_COLLECTION,
-    dbSavedCourses: process.env.MONGO_SAVED_COURSES,
+    coursesDB: process.env.MONGO_DB_COURSES,
+    favoritesCol: process.env.MONGO_FAVORITES,
 };
 
 // Establish a connection to our database
@@ -89,7 +88,7 @@ app.post("/search", async (req, res) => {
 
         const cursor = client
             .db(mongo.dbName)
-            .collection(mongo.collection)
+            .collection(mongo.favoritesCol)
             .find({ course: req.body.course });
 
         result = await cursor.toArray();
@@ -141,7 +140,7 @@ app.post("/fav", async (req, res) => {
             // Add to Favorites
             await client
                 .db(mongo.dbName)
-                .collection(mongo.collection)
+                .collection(mongo.favoritesCol)
                 .insertOne({
                     course: cse[0],
                     section: cse[1],
@@ -151,7 +150,7 @@ app.post("/fav", async (req, res) => {
             // Remove from Favorites
             await client
                 .db(mongo.dbName)
-                .collection(mongo.collection)
+                .collection(mongo.favoritesCol)
                 .deleteOne({ course: cse[0], section: cse[1] });
         }
     } catch (e) {
@@ -176,7 +175,7 @@ app.get("/favorites", async (req, res) => {
 
         const cursor = client
             .db(mongo.dbName)
-            .collection(mongo.collection)
+            .collection(mongo.favoritesCol)
             .find();
 
         result = await cursor.toArray();
@@ -216,10 +215,11 @@ app.get("/favorites", async (req, res) => {
 });
 
 // ==================== Functions ====================
-// execute every 24 hours
-setInterval(function () {
-    queryDatabaseForCourses();
-}, 1000 * 60 * 60 * 24);
+
+// Execute every 24 hours
+// setInterval(function () {
+queryDatabaseForCourses();
+// }, 1000 * 60 * 60 * 24);
 
 function queryDatabaseForCourses() {
     // get all course code and name from api and store in local json file
@@ -243,8 +243,8 @@ function queryDatabaseForCourses() {
                 fs.writeFileSync('courses_for_partialsearch.json', JSON.stringify(arr));   
 
                 await client
-                    .db(mongo.dbSavedCourses)
-                    .collection(mongo.savedCoursesCollection)
+                    .db(mongo.dbName)
+                    .collection(mongo.coursesDB)
                     .insertMany(json);
             } catch (e) {
                 console.log(e);
