@@ -8,6 +8,8 @@ const express = require("express");
 
 // Include node:path module to work with files and directory paths
 const path = require("path");
+// 
+const fs = require('fs');
 
 // Include body-parser to parse URL encoded data
 const bodyParser = require("body-parser");
@@ -57,6 +59,8 @@ const mongo = {
     pass: process.env.MONGO_DB_PASSWORD,
     dbName: process.env.MONGO_DB_NAME,
     collection: process.env.MONGO_COLLECTION,
+    savedCoursesCollection: process.env.MONGO_SAVED_COLLECTION,
+    dbSavedCourses: process.env.MONGO_SAVED_COURSES,
 };
 
 // Establish a connection to our database
@@ -212,3 +216,41 @@ app.get("/favorites", async (req, res) => {
 });
 
 // ==================== Functions ====================
+// execute every 24 hours
+setInterval(function () {
+    queryDatabaseForCourses();
+}, 1000 * 60 * 60 * 24);
+
+function queryDatabaseForCourses() {
+    // get all course code and name from api and store in local json file
+    const url = "https://api.umd.io/v1/courses/list";
+    fetch(url)
+        .then((response) => response.json())
+        .then(async function (json) {
+            try {
+                await client.connect();
+
+                await client
+                    .db(mongo.dbSavedCourses)
+                    .collection(mongo.savedCoursesCollection)
+                    .insertMany(json);
+                    // delete courses_for_partialsearch.json file
+                    fs.unlinkSync('courses_for_partialsearch.json');
+
+                    arr = [];
+                    for (let course of json) {
+                        map = {};
+                        map["course_id"] = course.course_id;
+                        map["name"] = course.name;
+                        arr.push(map);
+                    }
+                    // create courses_for_partialsearch.json file
+                    fs.writeFileSync('courses_for_partialsearch.json', JSON.stringify(arr));
+            } catch (e) {
+                console.log(e);
+            } finally {
+                await client.close();
+            }
+        })
+        .catch((error) => console.log(error));
+}
