@@ -229,6 +229,18 @@ function queryDatabaseForCourses() {
         .then(async function (json) {
             try {
                 await client.connect();
+                
+                // delete courses_for_partialsearch.json file
+                fs.unlinkSync('courses_for_partialsearch.json');
+                arr = [];
+                for (let course of json) {
+                    map = {};
+                    map["course_id"] = course.course_id;
+                    map["name"] = course.name;
+                    arr.push(map);
+                }
+                // create courses_for_partialsearch.json file
+                fs.writeFileSync('courses_for_partialsearch.json', JSON.stringify(arr));   
 
                 await client
                     .db(mongo.dbName)
