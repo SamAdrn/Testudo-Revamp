@@ -228,10 +228,8 @@ function queryDatabaseForCourses() {
         .then((response) => response.json())
         .then(async function (json) {
             try {
-                await client.connect();
-                
                 // delete courses_for_partialsearch.json file
-                fs.unlinkSync('courses_for_partialsearch.json');
+                // fs.unlinkSync('courses.json');
                 arr = [];
                 for (let course of json) {
                     map = {};
@@ -240,16 +238,10 @@ function queryDatabaseForCourses() {
                     arr.push(map);
                 }
                 // create courses_for_partialsearch.json file
-                fs.writeFileSync('courses_for_partialsearch.json', JSON.stringify(arr));   
+                fs.writeFileSync('courses.json', JSON.stringify(arr));   
 
-                await client
-                    .db(mongo.dbName)
-                    .collection(mongo.coursesDB)
-                    .insertMany(json);
             } catch (e) {
                 console.log(e);
-            } finally {
-                await client.close();
             }
         })
         .catch((error) => console.log(error));
