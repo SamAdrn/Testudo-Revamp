@@ -58,7 +58,7 @@ const mongo = {
     user: process.env.MONGO_DB_USERNAME,
     pass: process.env.MONGO_DB_PASSWORD,
     dbName: process.env.MONGO_DB_NAME,
-    coursesDB: process.env.MONGO_DB_COURSES,
+    coursesCol: process.env.MONGO_DB_COURSES,
     favoritesCol: process.env.MONGO_FAVORITES,
 };
 
@@ -217,9 +217,9 @@ app.get("/favorites", async (req, res) => {
 // ==================== Functions ====================
 
 // Execute every 24 hours
-// setInterval(function () {
-queryDatabaseForCourses();
-// }, 1000 * 60 * 60 * 24);
+setInterval(function () {
+    queryDatabaseForCourses();
+}, 1000 * 60 * 60 * 24);
 
 function queryDatabaseForCourses() {
     // get all course code and name from api and store in local json file
