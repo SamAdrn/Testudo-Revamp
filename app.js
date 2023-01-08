@@ -99,7 +99,9 @@ app.post("/search", async (req, res) => {
     }
 
     // Retrieve courses from API and render them onto courses.ejs
-    const url = `https://api.umd.io/v1/courses/${req.body.course}`;
+    const url = `https://api.umd.io/v1/courses/${req.body.course
+        .split("—")[0]
+        .trim()}`;
     await fetch(url)
         .then((response) => response.json())
         .then(async function (json) {
@@ -214,12 +216,48 @@ app.get("/favorites", async (req, res) => {
     res.render("favorites", { courses: favArr });
 });
 
+// Handle GET Request to /suggest
+app.get("/suggest", async (req, res) => {
+    // console.log(req.query.search);
+    const re = new RegExp(req.query.search, "i");
+    console.log(re);
+
+    await client.connect();
+
+    const cursor = client
+        .db(mongo.dbName)
+        .collection(mongo.coursesCol)
+        .find({
+            course_id: { $regex: re },
+        });
+        // .limit(10);
+
+    let data = await cursor.toArray();
+
+    if (data.length < 10) {
+
+        const cursor = client
+            .db(mongo.dbName)
+            .collection(mongo.coursesCol)
+            .find({
+                name: { $regex: re },
+            });
+            // .limit(10 - data.length);
+
+        let addData = await cursor.toArray()
+
+        data = data.concat(addData);
+    }
+
+    res.send(data);
+});
+
 // ==================== Functions ====================
 
 // Execute every 24 hours
-setInterval(function () {
-    queryDatabaseForCourses();
-}, 1000 * 60 * 60 * 24);
+// setInterval(function () {
+//     queryDatabaseForCourses();
+// }, 1000 * 60 * 60 * 24);
 
 function queryDatabaseForCourses() {
     // get all course code and name from api and store in local json file
@@ -228,21 +266,28 @@ function queryDatabaseForCourses() {
         .then((response) => response.json())
         .then(async function (json) {
             try {
-                // delete courses_for_partialsearch.json file
-                // fs.unlinkSync('courses.json');
-                arr = [];
-                for (let course of json) {
-                    map = {};
-                    map["course_id"] = course.course_id;
-                    map["name"] = course.name;
-                    arr.push(map);
-                }
-                // create courses_for_partialsearch.json file
-                fs.writeFileSync('courses.json', JSON.stringify(arr));   
+                await client.connect();
 
+                await client
+                    .db(mongo.dbName)
+                    .collection(mongo.coursesCol)
+                    .deleteMany();
+
+                await client.connect();
+
+                await client
+                    .db(mongo.dbName)
+                    .collection(mongo.coursesCol)
+                    .insertMany(json);
             } catch (e) {
                 console.log(e);
             }
         })
         .catch((error) => console.log(error));
 }
+
+// { course_id: { $regex: /CMSC/ } }
+// { $or: [{ course_id: { $regex: /intro/ } }, { name: { $regex: /intro/ } }] }
+// { name: { $regex: /Writing/ } }
+
+queryDatabaseForCourses();

@@ -29,11 +29,15 @@
     <!-- Flexbox for all forms -->
     <div class="d-flex justify-content-evenly mt-5">
         <!-- Search by Course ID Form -->
-        <form method="post" action="search" class="p-4 border rounded">
+        <form autocomplete="off" method="post" action="search" 
+            class="p-4 border rounded search-form">
             <div class="row mb-3">
                 <label for="course" class="col-sm-3 col-form-label">Course</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" name="course" placeholder="CMSC335" required>
+                    <input type="text" class="form-control" name="course" 
+                        placeholder="CMSC335" id="course-input" 
+                        onkeyup="suggest(this)" required>
+                    <div id="course-input-sug" hidden></div>
                 </div>
             </div>
             <div class="d-grid">
@@ -42,6 +46,7 @@
         </form>
     </div>
 
+    <script src="scripts/suggestions.js"></script>
 </body>
 
 </html>
