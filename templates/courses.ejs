@@ -46,7 +46,7 @@
   <div class="row row-cols-1 g-4 mx-4 my-3 cards-div">
 
 
-    <% let i=0 /* Counter to access sections */ %>
+    <% let i=0 /* Counter to access each course's sections */ %>
     <% for (let course of courses) { %>
 
     <div class="card p-2">
@@ -131,18 +131,22 @@
       </div>
 
       <!-- Accordion to Display Section Information -->
-      <div class="accordion" id="course-accordion">
+      <div class="accordion" id="course-accordion-<%- i %>">
 
         <!-- Accordion Button to open Sections Div -->
         <div class="accordion-item">
           <h2 class="accordion-header" id="sections">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-sect" aria-expanded="false" aria-controls="flush-sect">
+            <button class="accordion-button collapsed" type="button" 
+                data-bs-toggle="collapse" data-bs-target="#flush-sect-<%- i %>" 
+                aria-expanded="false" aria-controls="flush-sect-<%- i %>">
               <h5 class="m-0">Sections</h5>
             </button>
           </h2>
 
           <!-- Sections Div -->
-          <div id="flush-sect" class="accordion-collapse collapse" aria-labelledby="sections" data-bs-parent="#course-accordion">
+          <div id="flush-sect-<%- i %>" class="accordion-collapse collapse" 
+                aria-labelledby="sections" 
+                data-bs-parent="#course-accordion-<%- i %>">
             <div class="accordion-body">
 
               <% let j = 0 // to keep track of color coding section blocks %>

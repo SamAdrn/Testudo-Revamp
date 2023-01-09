@@ -81,54 +81,154 @@ app.get("/", (req, res) => {
 
 // Perform search for POST request to /search
 app.post("/search", async (req, res) => {
-    // Get Favorite Courses
-    let result;
+    const api = "https://api.umd.io/v1/courses/";
+    let url = "";
+    const searchInp = req.body.course;
+    let searchRes, favorites;
+
     try {
         await client.connect();
 
-        const cursor = client
-            .db(mongo.dbName)
-            .collection(mongo.favoritesCol)
-            .find({ course: req.body.course });
+        if (/[-—]/.test(searchInp)) {
+            // If courses match a pre-defined format from suggestions
+            url = `${api}${searchInp.split("—")[0].trim()}`;
+        } else {
+            // Else, for any other various forms
+            const re = new RegExp(searchInp, "i");
 
-        result = await cursor.toArray();
+            const cursor = client
+                .db(mongo.dbName)
+                .collection(mongo.coursesCol)
+                .find({
+                    $or: [
+                        { course_id: { $regex: re } },
+                        { name: { $regex: re } },
+                    ],
+                });
+
+            // Retrieve all courses IDs matching the search criterias
+            try {
+                searchRes = await (
+                    await cursor.toArray()
+                ).map((c) => c.course_id);
+
+                url = `${api}${searchRes.join(",")}`;
+            } catch (e) {
+                res.render("error", {
+                    info: `FAILED to search courses with ${re}`,
+                    error: e,
+                });
+            }
+        }
+
+        console.log(url);
+
+        // Retrieve all course information
+        await fetch(url)
+            .then((response) => response.json())
+            .then(async function (coursesArr) {
+                console.log("Retrieving courses complete\n\n");
+
+                let sectionsArr = [],
+                    i = 0;
+
+                for (let course of coursesArr) {
+                    const urlSect =
+                        "https://api.umd.io/v1/courses/sections?" +
+                        `course_id=${course.course_id}&per_page=100&sort=section_id`;
+
+                    console.log(urlSect);
+
+                    await fetch(urlSect)
+                        .then((responseSect) => responseSect.json())
+                        .then((jsonSect) => sectionsArr.push(jsonSect))
+                        .catch((e) =>
+                            res.render("error", {
+                                info: `POST to ${urlSect}`,
+                                error: e,
+                            })
+                        );
+
+                    sectionsArr[i++].sort((x, y) =>
+                        x.number.localeCompare(y.number)
+                    );
+                }
+
+                console.log("Retrieving sections complete\n\n");
+
+                res.render("courses", {
+                    courses: coursesArr,
+                    sections: sectionsArr,
+                    favorites: [],
+                });
+            })
+            .catch((e) =>
+                res.render("error", {
+                    info: `POST to ${url}`,
+                    error: e,
+                })
+            );
     } catch (e) {
-        console.log(e);
+        res.render("error", {
+            info: `FAILED to connect to DB CLIENT or FATAL ERROR has occurred`,
+            error: e,
+        });
     } finally {
         await client.close();
     }
 
-    // Retrieve courses from API and render them onto courses.ejs
-    const url = `https://api.umd.io/v1/courses/${req.body.course
-        .split("—")[0]
-        .trim()}`;
-    await fetch(url)
-        .then((response) => response.json())
-        .then(async function (json) {
-            let sectionsArr = [],
-                i = 0;
+    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-            for (let course of json) {
-                const urlSect =
-                    "https://api.umd.io/v1/courses/sections?" +
-                    `course_id=${course.course_id}&per_page=100&sort=section_id`;
+    // // Get Favorite Courses
+    // let result;
+    // try {
+    //     await client.connect();
 
-                await fetch(urlSect)
-                    .then((responseSect) => responseSect.json())
-                    .then((jsonSect) => sectionsArr.push(jsonSect));
+    //     const cursor = client
+    //         .db(mongo.dbName)
+    //         .collection(mongo.favoritesCol)
+    //         .find({ course: req.body.course });
 
-                sectionsArr[i++].sort((x, y) =>
-                    x.number.localeCompare(y.number)
-                );
-            }
+    //     result = await cursor.toArray();
+    // } catch (e) {
+    //     console.log(e);
+    // } finally {
+    //     await client.close();
+    // }
 
-            res.render("courses", {
-                courses: json,
-                sections: sectionsArr,
-                favorites: result,
-            });
-        })
-        .catch((error) => res.render("error", { url: url, error: error }));
+    // // Retrieve courses from API and render them onto courses.ejs
+    // url = `https://api.umd.io/v1/courses/${req.body.course
+    //     .split("—")[0]
+    //     .trim()}`;
+    // await fetch(url)
+    //     .then((response) => response.json())
+    //     .then(async function (json) {
+    //         let sectionsArr = [],
+    //             i = 0;
+
+    //         for (let course of json) {
+    //             const urlSect =
+    //                 "https://api.umd.io/v1/courses/sections?" +
+    //                 `course_id=${course.course_id}&per_page=100&sort=section_id`;
+
+    //             await fetch(urlSect)
+    //                 .then((responseSect) => responseSect.json())
+    //                 .then((jsonSect) => sectionsArr.push(jsonSect));
+
+    //             sectionsArr[i++].sort((x, y) =>
+    //                 x.number.localeCompare(y.number)
+    //             );
+    //         }
+
+    //         res.render("courses", {
+    //             courses: json,
+    //             sections: sectionsArr,
+    //             favorites: result,
+    //         });
+    //     })
+    //     .catch((error) =>
+    //         res.render("error", { info: `POST to ${url}`, error: error })
+    //     );
 });
 
 // Handle adding course sections to favorites
@@ -218,7 +318,6 @@ app.get("/favorites", async (req, res) => {
 
 // Handle GET Request to /suggest
 app.get("/suggest", async (req, res) => {
-    // console.log(req.query.search);
     const re = new RegExp(req.query.search, "i");
     console.log(re);
 
@@ -230,21 +329,20 @@ app.get("/suggest", async (req, res) => {
         .find({
             course_id: { $regex: re },
         });
-        // .limit(10);
+    // .limit(10);
 
     let data = await cursor.toArray();
 
     if (data.length < 10) {
-
         const cursor = client
             .db(mongo.dbName)
             .collection(mongo.coursesCol)
             .find({
                 name: { $regex: re },
             });
-            // .limit(10 - data.length);
+        // .limit(10 - data.length);
 
-        let addData = await cursor.toArray()
+        let addData = await cursor.toArray();
 
         data = data.concat(addData);
     }

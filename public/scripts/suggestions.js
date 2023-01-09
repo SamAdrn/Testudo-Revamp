@@ -1,6 +1,11 @@
 async function suggest(input) {
-    let resDiv = document.getElementById(`${input.id}-sug`);
+    console.log('creating suggestions');
+    const resDiv = document.getElementById(`${input.id}-sug`);
+    const loader = document.getElementById('loader');
     let suggestions = [];
+
+    loader.hidden = false;
+
     if (input.value.length > 2) {
         const url = "/suggest?" + new URLSearchParams({ search: input.value }).toString()
         await fetch(url)
@@ -19,6 +24,10 @@ async function suggest(input) {
     else {
         resDiv.hidden = true;
     }
+
+    loader.hidden = true;
+
+    console.log('suggestions complete');
 }
 
 function fill(input, val) {
