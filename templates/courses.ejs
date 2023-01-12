@@ -43,7 +43,7 @@
   </div>
 
   <!-- Course Cards Div -->
-  <div class="row row-cols-1 g-4 mx-4 my-3 cards-div">
+  <div class="row row-cols-1 g-4 cards-div">
 
 
     <% let i=0 /* Counter to access each course's sections */ %>
@@ -137,96 +137,19 @@
         <div class="accordion-item">
           <h2 class="accordion-header" id="sections">
             <button class="accordion-button collapsed" type="button" 
-                data-bs-toggle="collapse" data-bs-target="#flush-sect-<%- i %>" 
-                aria-expanded="false" aria-controls="flush-sect-<%- i %>">
-              <h5 class="m-0">Sections</h5>
+                data-bs-toggle="collapse" data-bs-target="#course-sect-<%- i %>" 
+                aria-expanded="false" aria-controls="course-sect-<%- i %>"
+                onclick="getSections(this, '<%- i %>', '<%- course.course_id %>')">
+              <h5 class="m-0 d-inline">Sections</h5>
+              <div class="ms-3 d-inline loader hidden" id="loader-<%- i %>"></div>
             </button>
           </h2>
 
           <!-- Sections Div -->
-          <div id="flush-sect-<%- i %>" class="accordion-collapse collapse" 
+          <div id="course-sect-<%- i %>" class="accordion-collapse collapse" 
                 aria-labelledby="sections" 
                 data-bs-parent="#course-accordion-<%- i %>">
-            <div class="accordion-body">
-
-              <% let j = 0 // to keep track of color coding section blocks %>
-
-              <% for (let section of sections[i]) { %>
-
-              <% j++ %>
-
-              <!-- Section (along with color code depending on open seats) -->
-              <div class="row g-0 p-3  
-              <% if (section.open_seats < 1) { %>
-                section-full
-              <% } else { %>
-                section-open
-              <% } %> 
-              " <% if (j % 2 === 0) { %> style='background-color: #F8F9FA;' <% } %>>
-
-                <!-- Section Number -->
-                <div class="col-1 align-self-center">
-                  <h6><%- section.number %> </h6>
-                </div>
-
-                <!-- Instructor Information -->
-                <div class="col-3 ps-3 align-self-center">
-                  <h4><%- section.instructors.join(",<br>") %> </h4>
-                </div>
-
-                <!-- Meetings Div -->
-                <div class="col-4 ps-3 align-self-center">
-
-                  <% section.meetings.forEach((meeting) => { %>
-
-                  <!-- Meeting Information -->
-                  <div class="row">
-                    <strong class="m-0 col-3">
-                      <% if (meeting.classtype === "") { %>
-                      Lecture:
-                      <% } else { %>
-                      Discussion:
-                      <% } %>
-                    </strong>
-                    <p class="m-0 col-9">
-                      <%- meeting.building %>
-                      <%- meeting.room %>
-                      <% if (meeting.days !=="" ) { %>
-                      (<%- meeting.days %> : <%- meeting.start_time %> - <%- meeting.end_time %>)
-                      <% } %>
-                    </p>
-                  </div>
-                  <% }) %>
-
-                </div>
-
-                <!-- Seating Information -->
-                <div class="col-3 ps-3 align-self-center">
-                  <h6>Seats Available:</h6>
-                  <h4 class="d-inline"> <%- section.open_seats %> / <%- section.seats %></h4>
-                  <% if (section.open_seats < 1) { %>
-                  &nbsp;&nbsp;<h5 class="d-inline">(<%- section.waitlist %> in Waitlist)</h5>
-                  <% }%>
-                </div>
-
-                <!-- Favorite Button -->
-                <div class="col-1 align-self-center">
-                  <button class="fav-button">
-                    <i class="fa-solid fa-star fav-star 
-                    <% if (favorites.some((c) => (c.course === course.course_id && c.section === section.number))) { %>
-                      fav-checked
-                    <% } %> 
-                    " onclick="handleFav(this, 'id=<%- section.section_id %>')"></i>
-                  </button>
-                </div>
-
-              </div>
-
-              <% } %>
-              <% i++; %>
-
-            </div>
-
+            <!-- Sections Go In Here -->
           </div>
 
         </div>
@@ -234,11 +157,106 @@
       </div>
 
     </div>
-
+    <% i++; %> 
     <% } %>
 
   </div>
 
+  <script>
+
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+
+    async function getSections(accordBtn, idNum, courseID) {
+      const sectionsDiv = document.getElementById(`course-sect-${idNum}`);
+      const loader = document.getElementById(`loader-${idNum}`);
+
+      loader.classList.remove('hidden');
+
+      if (sectionsDiv.innerHTML !== '') {
+        const url = '/sections?' + new URLSearchParams({ course: courseID }).toString();
+        let result = [], error = '';
+
+        await fetch(url)
+          .then((response) => response.json())
+          .then((json) => result = json)
+          .catch((e) => error = e);
+
+        if (error !== '') {
+          let div = '<div class="p-5 text-center">There was an issue retrieving sections, please try again later.</div>';
+          sectionsDiv.innerHTML = div;
+        } else if (result.sections.length !== 0) {
+          sectionsDiv.innerHTML = buildSectionsDiv(result.sections, result.favorites);
+          accordBtn.removeAttribute("onclick");
+        } else {
+          let div = '<div class="p-5 text-center">No sections to display. Contact department to register for this course.</div>';
+          sectionsDiv.innerHTML = div;
+          accordBtn.removeAttribute("onclick");
+        }
+
+      }
+      loader.classList.add('hidden');
+    }
+
+    function buildSectionsDiv(sectionsArr, favoritesArr) {
+      let res = '<div class="accordion-body">', i = 0;
+      for (let section of sectionsArr) {
+        i++;
+
+        // Section Div Body
+        res += '<div class="row g-0 p-3 ';
+        if (section.open_seats < 1) {
+          res += 'section-full"';
+        } else {
+          res += 'section-open"';
+        }
+        // Alternate between Background Colors
+        if (i % 2 !== 0) {
+          res += 'style="background-color: #F8F9FA;"';
+        }
+        res += '>';
+
+        // Section Number
+        res += `<div class="col-1 align-self-center"><h6>${section.number}</h6></div>`
+
+        // Instructor Information
+        res += `<div class="col-3 ps-3 align-self-center"><h4>${section.instructors.join(",<br>")}</h4></div>`
+
+        // Meetings
+        res += '<div class="col-5 align-self-center">';
+          section.meetings.forEach((meeting) => {
+            // Meeting Information
+            res += '<div class="row">';
+            res += `<strong class="m-0 col-4">${(meeting.classtype === "") ? 'Lecture:' : 'Discussion:'}</strong>`;
+            res += `<p class="m-0 col-8">${meeting.building} ${meeting.room} `;
+            if (meeting.days !== "") {
+              res += `(${meeting.days} : ${meeting.start_time} - ${meeting.end_time})`;
+            }
+            res += '</p></div>';
+          });
+        res += '</div>';
+
+        // Seating Information
+        res += '<div class="col-2 ps-3 align-self-center"><h6>Seats Available:</h6>';
+        res += `<h4> ${section.open_seats} / ${section.seats} </h4>`
+        if (section.open_seats < 1) {
+          res += `<h6>(${section.waitlist} in Waitlist)</h6>`
+        }
+        res += '</div>';
+
+        // Favorite Button
+        res += '<div class="col-1 align-self-center ps-3"><button class="fav-button">';
+        res += '<i class="fa-solid fa-star fav-star ps-3';
+        if (favoritesArr.some((s) => (s.section === section.number))) {
+          res += 'fav-checked';
+        }
+        res += `" onclick="handleFav(this, 'id=${section.section_id}')"></i>`
+        res += '</button></div></div>';
+      }
+      res += '</div>';
+      return res;
+    }
+
+  </script>
   <script src="scripts/favorites.js"></script>
 
 </body>

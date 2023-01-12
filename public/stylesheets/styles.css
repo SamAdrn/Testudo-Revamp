@@ -26,7 +26,7 @@ body {
     color: white;
 }
 
-#loader {
+.loader {
     border: 3px solid #f3f3f3;
     border-top: 3px solid #ffd200;
     border-radius: 50%;
@@ -42,6 +42,11 @@ body {
     100% {
         transform: rotate(360deg);
     }
+}
+
+.hidden {
+    opacity: 0;
+    visibility: hidden;
 }
 
 /* ======== index.ejs ======== */
@@ -119,7 +124,7 @@ body {
     background: #eee;
 }
 
-/* ======== search.ejs ======== */
+/* ======== courses.ejs ======== */
 
 .offcanvas-btn {
     top: 50%;
@@ -129,6 +134,10 @@ body {
 
 .offcanvas-btn:hover {
     color: #ffd200;
+}
+
+.cards-div {
+    margin: 1% 6%;
 }
 
 .section-open {
