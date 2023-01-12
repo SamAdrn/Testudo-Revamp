@@ -11,6 +11,7 @@ async function suggest(input) {
         await fetch(url)
             .then((response) => response.json())
             .then((json) => suggestions = json)
+            .catch((e) => console.log(e));
     } 
     if (suggestions.length !== 0) {
         let result = '';
