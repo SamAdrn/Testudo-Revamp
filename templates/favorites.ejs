@@ -10,7 +10,7 @@
   <%- include('partials/navbar') %>
 
   <div class="text-center m-5">
-    <h1>Favorited Courses</h1>
+    <h1>Favorite Courses</h1>
   </div>
 
   <div class="cards-div m-5">
@@ -74,7 +74,7 @@
           <!-- Favorite Button -->
           <div class="col-1 align-self-center">
             <button class="fav-button">
-              <i class="fa-solid fa-star fav-star fav-checked" onclick="handleFav(this, 'id=<%- course.section_id %>')"></i>
+              <i class="fa-solid fa-star fav-star fav-checked" onclick="handleFav(this, '<%- course.section_id %>')"></i>
             </button>
           </div>
 

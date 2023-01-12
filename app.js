@@ -123,21 +123,21 @@ app.post("/search", async (req, res) => {
                 });
             }
         }
-        console.log(url);
 
         // Retrieve all course information
         await fetch(url)
             .then((response) => response.json())
-            .then(async function (coursesArr) {
-                console.log("Retrieving courses complete\n\n");
-                
+            .then((coursesArr) => {
+                if (coursesArr.error_code === 404) {
+                    throw new Error(`404 - ${coursesArr.message}`);
+                }
                 res.render("courses", {
                     courses: coursesArr,
                 });
             })
             .catch((e) =>
                 res.render("error", {
-                    info: `POST to ${url}`,
+                    info: `GET to ${url}`,
                     error: e,
                 })
             );
@@ -152,13 +152,13 @@ app.post("/search", async (req, res) => {
 });
 
 // Handle adding course sections to favorites
-app.post("/fav", async (req, res) => {
-    const cse = req.body.id.split("-");
+app.get("/fav", async (req, res) => {
+    const cse = req.query.section.split("-");
 
     try {
         await client.connect();
 
-        if (req.body.act === "add") {
+        if (req.query.action === "add") {
             // Add to Favorites
             await client
                 .db(mongo.dbName)
@@ -176,12 +176,12 @@ app.post("/fav", async (req, res) => {
                 .deleteOne({ course: cse[0], section: cse[1] });
         }
     } catch (e) {
-        console.log(e);
+        res.send({ status: -1, error: e });
     } finally {
         await client.close();
     }
 
-    res.end();
+    res.send({ status: 1 });
 });
 
 // Handle GET Request to /favorites

@@ -249,7 +249,7 @@
         if (favoritesArr.some((s) => (s.section === section.number))) {
           res += 'fav-checked';
         }
-        res += `" onclick="handleFav(this, 'id=${section.section_id}')"></i>`
+        res += `" onclick="handleFav(this, '${section.section_id}')"></i>`
         res += '</button></div></div>';
       }
       res += '</div>';
