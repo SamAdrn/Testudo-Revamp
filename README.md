@@ -28,7 +28,11 @@ The server can be accessed at [localhost:3000](http://localhost:3000).
 
 To view a live demo of our project, check out this [YouTube Video](https://youtu.be/HxArLlzoiEo).
 
-The goal of this project is to make viewing class schedules a lot easier, with a new minimalistic design and additional tools to help make faster decisions for course registrations. This is a WIP, but so far, we've implemented some of the core functionalities, as described below:
+The goal of this project is to make viewing class schedules a lot easier, with a new minimalistic design and additional tools to help make faster decisions for course registrations. As a reference, this is what the current Schedule of Classes service that we students use looks like:
+
+<img src="public/screenshots/ancient-testudo.png" alt="Home Page" width="500">
+
+The project aims to improve this interface such that it is able to reflect the great quality of education that students of the University of Maryland receives. This is a WIP, but so far, we've implemented some of the core functionalities, as described below:
 
 ---
 
