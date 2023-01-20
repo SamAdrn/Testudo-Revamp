@@ -59,7 +59,8 @@ const mongo = {
     pass: process.env.MONGO_DB_PASSWORD,
     dbName: process.env.MONGO_DB_NAME,
     coursesCol: process.env.MONGO_DB_COURSES,
-    favoritesCol: process.env.MONGO_FAVORITES,
+    favoritesCol: process.env.MONGO_DB_FAVORITES,
+    majorsCol: process.env.MONGO_DB_MAJORS
 };
 
 // Establish a connection to our database
@@ -131,6 +132,7 @@ app.post("/search", async (req, res) => {
                 if (coursesArr.error_code === 404) {
                     throw new Error(`404 - ${coursesArr.message}`);
                 }
+                console.log(coursesArr);
                 res.render("courses", {
                     courses: coursesArr,
                 });
@@ -236,10 +238,9 @@ app.get("/favorites", async (req, res) => {
     res.render("favorites", { courses: favArr });
 });
 
-// Handle GET Request to /suggest
-app.get("/suggest", async (req, res) => {
+// Handle GET Request to /suggestCourses
+app.get("/suggestCourses", async (req, res) => {
     const re = new RegExp(req.query.search, "i");
-    console.log(re);
 
     await client.connect();
 
@@ -249,7 +250,6 @@ app.get("/suggest", async (req, res) => {
         .find({
             course_id: { $regex: re },
         });
-    // .limit(10);
 
     let data = await cursor.toArray();
 
@@ -260,7 +260,6 @@ app.get("/suggest", async (req, res) => {
             .find({
                 name: { $regex: re },
             });
-        // .limit(10 - data.length);
 
         let addData = await cursor.toArray();
 
@@ -270,6 +269,7 @@ app.get("/suggest", async (req, res) => {
     res.send(data);
 });
 
+// Handle GET Request to /sections
 app.get("/sections", async (req, res) => {
     let sectionsArr, favoritesArr;
 
@@ -301,6 +301,24 @@ app.get("/sections", async (req, res) => {
     res.send({ sections: sectionsArr, favorites: favoritesArr });
 });
 
+// Handle GET Request to /suggestMajors
+app.get("/suggestMajors", async (req, res) => {
+    const re = new RegExp(req.query.search, "i");
+
+    await client.connect();
+
+    const cursor = client
+        .db(mongo.dbName)
+        .collection(mongo.majorsCol)
+        .find({
+            name: { $regex: re },
+        });
+
+    let data = await cursor.toArray();
+
+    res.send(data);
+});
+
 // ==================== Functions ====================
 
 // Execute every 24 hours
@@ -308,35 +326,72 @@ app.get("/sections", async (req, res) => {
 //     queryDatabaseForCourses();
 // }, 1000 * 60 * 60 * 24);
 
-function queryDatabaseForCourses() {
-    // get all course code and name from api and store in local json file
-    const url = "https://api.umd.io/v1/courses/list";
-    fetch(url)
-        .then((response) => response.json())
-        .then(async function (json) {
-            try {
-                await client.connect();
+async function queryDatabaseForCourses() {
+    try {
+        await client.connect();
 
-                await client
-                    .db(mongo.dbName)
-                    .collection(mongo.coursesCol)
-                    .deleteMany();
+        // Get all Course IDs and Course Names and store it into MongoDB
+        const urlCourse = "https://api.umd.io/v1/courses/list";
 
-                await client.connect();
+        console.log('getting courses');
 
-                await client
-                    .db(mongo.dbName)
-                    .collection(mongo.coursesCol)
-                    .insertMany(json);
-            } catch (e) {
-                console.log(e);
-            }
-        })
-        .catch((error) => console.log(error));
+        await fetch(urlCourse)
+            .then((response) => response.json())
+            .then(async function (json) {
+                try {
+                    await client
+                        .db(mongo.dbName)
+                        .collection(mongo.coursesCol)
+                        .deleteMany();
+
+                    await client
+                        .db(mongo.dbName)
+                        .collection(mongo.coursesCol)
+                        .insertMany(json);
+                } catch (e) {
+                    console.log(e);
+                }
+            })
+            .catch((error) => console.log(error));
+
+        console.log('courses done');
+
+        // Get all Majors and store it into MongoDB
+        const urlMajor = "https://api.umd.io/v1/majors/list";
+
+        console.log('getting majors');
+
+        await fetch(urlMajor)
+            .then((response) => response.json())
+            .then(async function (json) {
+                try {
+                    await client
+                        .db(mongo.dbName)
+                        .collection(mongo.majorsCol)
+                        .deleteMany();
+
+                    await client.connect();
+
+                    await client
+                        .db(mongo.dbName)
+                        .collection(mongo.majorsCol)
+                        .insertMany(json);
+                } catch (e) {
+                    console.log(e);
+                }
+            })
+            .catch((error) => console.log(error));
+
+        console.log('majors done');
+    } catch (e) {
+        console.log(e);
+    } finally {
+        client.close();
+    }
 }
 
 // { course_id: { $regex: /CMSC/ } }
 // { $or: [{ course_id: { $regex: /intro/ } }, { name: { $regex: /intro/ } }] }
 // { name: { $regex: /Writing/ } }
 
-queryDatabaseForCourses();
+// queryDatabaseForCourses();

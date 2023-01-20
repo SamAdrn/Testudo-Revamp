@@ -1,13 +1,12 @@
 async function suggest(input) {
-    console.log('creating suggestions');
     const resDiv = document.getElementById(`${input.id}-sug`);
     const loader = document.getElementById('loader');
     let suggestions = [];
 
     loader.hidden = false;
 
-    if (input.value.length > 2) {
-        const url = "/suggest?" + new URLSearchParams({ search: input.value }).toString()
+    if (input.value.length > 1) {
+        const url = "/suggestCourses?" + new URLSearchParams({ search: input.value }).toString()
         await fetch(url)
             .then((response) => response.json())
             .then((json) => suggestions = json)
@@ -17,7 +16,11 @@ async function suggest(input) {
         let result = '';
         suggestions.forEach((course) => {
             let fullCourse = `${course.course_id} — ${course.name}`
-            result += `<li onclick="fill('${input.id}', '${fullCourse}')">${fullCourse}</li>`;
+            result += [
+                `<li onclick="fill('${input.id}', '${fullCourse}')">`,
+                `   ${fullCourse}`,
+                '</li>'
+            ].join('\n');
         })
         resDiv.innerHTML = `<ul>${result}</ul>`;
         resDiv.hidden = false;
@@ -27,11 +30,9 @@ async function suggest(input) {
     }
 
     loader.hidden = true;
-
-    console.log('suggestions complete');
 }
 
 function fill(input, val) {
-    document.getElementById(`${input}`).value = val;
-    document.getElementById(`${input}-sug`).hidden = true;
+    $(`#${input}`).val(val);
+    $(`#${input}-sug`).hide();
 }
