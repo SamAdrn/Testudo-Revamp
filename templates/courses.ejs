@@ -6,6 +6,7 @@
 </head>
 
 <body>
+
   <!-- Navbar -->
   <%- include('partials/navbar') %>
 
@@ -13,13 +14,13 @@
     <h1>Search Results</h1>
   </div>
 
-  <!-- Sticky Button to open search sidebar (search-offcanvas)  -->
+  <!-- Sticky Button to open left search sidebar (search-offcanvas)  -->
   <div type="button" data-bs-toggle="offcanvas" data-bs-target="#search-offcanvas" aria-controls="offcanvasScrolling">
     <i class="fa-solid fa-circle-chevron-right offcanvas-btn p-1 ms-3 sticky-top"></i>
   </div>
 
   <!-- Search Sidebar (search-offcanvas) -->
-  <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="search-offcanvas" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="true" tabindex="-1" id="search-offcanvas" aria-labelledby="offcanvasScrollingLabel">
     <div class="offcanvas-header">
       <h3 class="offcanvas-title" id="offcanvasScrollingLabel">Search</h3>
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -30,26 +31,182 @@
       <form method="post" action="search" class="p-4 mb-3 border rounded">
         <div class="row mb-3">
           <label for="class" class="col-sm-3 col-form-label">Course</label>
-          <div class="col-sm-9">
-            <input type="text" class="form-control" name="course" placeholder="CMSC335" required>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" name="course" placeholder="CMSC335" id="course-input" onkeyup="suggest(this)" required>
+            <div id="course-input-sug" style="width: 270px; height: 300px" hidden></div>
           </div>
+          <div class="col-sm-1 loader" id="loader" hidden></div>
         </div>
         <div class="d-grid">
           <button type="submit" class="btn btn-primary">Search</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Sticky Button to open right sort/filter sidebar (sort-filter-offcanvas)  -->
+  <div type="button" data-bs-toggle="offcanvas" data-bs-target="#sort-filter-offcanvas" aria-controls="offcanvasScrolling">
+    <i class="fa-solid fa-circle-chevron-left offcanvas-btn p-1 ms-3 sticky-top"></i>
+  </div>
+
+  <!-- Sort/Filter Sidebar (sort-filter-offcanvas) -->
+  <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="true" tabindex="-1" id="sort-filter-offcanvas" aria-labelledby="offcanvasScrollingLabel">
+    <div class="offcanvas-header">
+      <h3 class="offcanvas-title" id="offcanvasScrollingLabel">Sort / Filter</h3>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+
+      <!-- Sort by Course ID Div -->
+      <div class="card mb-4">
+
+        <div class="card-header">
+          <h5 class="pt-2">Sort Courses</h5>
+        </div>
+
+        <div class="card-body">
+          <div class="btn-group w-100" role="group" aria-label="Sort by Course ID or Credits Radio Button Group">
+            <input type="radio" class="btn-check" name="sort-radio" id="sort-course-id" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="sort-course-id">Course ID</label>
+
+            <input type="radio" class="btn-check" name="sort-radio" id="sort-credits" autocomplete="off">
+            <label class="btn btn-outline-primary" for="sort-credits">Credits</label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Filter by Credits Div -->
+      <div class="card mb-4">
+
+        <div class="card-header">
+          <h5 class="pt-2">Filter by Credits</h5>
+        </div>
+
+        <div class="card-body">
+          <div class="btn-group w-100" role="group" aria-label="Filter by Credits Checkbox Group">
+            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-1" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-credits-1">1</label>
+
+            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-2" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-credits-2">2</label>
+
+            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-3" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-credits-3">3</label>
+
+            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-4" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-credits-4">4</label>
+
+            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-5" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-credits-5">5</label>
+
+            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-6" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-credits-6">6</label>
+
+            <input type="checkbox" class="btn-check" id="deselect-filter-credits" autocomplete="off">
+            <label class="btn btn-outline-primary" for="deselect-filter-credits" data-bs-toggle="tooltip" data-bs-title="Deselect All Credit Filters">
+              <i class="fa-sharp fa-solid fa-circle-xmark"></i>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Filter by Gen-Ed Div -->
+      <div class="card mb-4">
+
+        <div class="card-header">
+          <h5 class="pt-2">Filter by Gen-Ed</h5>
+        </div>
+
+        <div class="card-body">
+
+          <div class="btn-group w-100 mb-2" role="group" aria-label="Options for Gen-Ed Checkbox Group">
+            <input type="checkbox" class="btn-check" id="deselect-filter-gened" autocomplete="off">
+            <label class="btn btn-outline-primary" for="deselect-filter-gened" data-bs-toggle="tooltip" data-bs-title="Deselect All Gen-Ed Filters">
+              <i class="fa-sharp fa-solid fa-circle-xmark"></i>
+            </label>
+
+            <input type="checkbox" class="btn-check" id="showonly-filter-gened" autocomplete="off">
+            <label class="btn btn-outline-primary" for="showonly-filter-gened" data-bs-toggle="tooltip" data-bs-title="Show only courses with Gen-Ed Credits">
+              Show only Gen-Ed
+            </label>
+          </div>
+
+          <!-- FS** (Fundamental Studies) Gen-Ed Group -->
+          <div class="btn-group w-100 mb-2" role="group" aria-label="Filter by Fundamental Studies Gen-Ed Checkbox Group">
+
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-fsaw" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-fsaw" data-bs-toggle="tooltip" data-bs-title="Academic Writing">FSAW</label>
+
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-fsar" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-fsar" data-bs-toggle="tooltip" data-bs-title="Analytic Reasoning">FSAR</label>
+
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-fsma" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-fsma" data-bs-toggle="tooltip" data-bs-title="Math">FSMA</label>
+
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-fsow" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-fsow" data-bs-toggle="tooltip" data-bs-title="Oral Communications">FSOC</label>
+
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-fspw" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-fspw" data-bs-toggle="tooltip" data-bs-title="Professional Writing">FSPW</label>
+
+          </div>
+
+          <!-- DS** (Distributive Studies) Gen-Ed Group -->
+          <div class="btn-group w-100 mb-2" role="group" aria-label="Filter by Distributive Studies Gen-Ed Checkbox Group">
+
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-dshs" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-dshs" data-bs-toggle="tooltip" data-bs-title="History and Social Sciences">DSHS</label>
+
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-dshu" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-dshu" data-bs-toggle="tooltip" data-bs-title="Humanities">DSHU</label>
+
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-dsns" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-dsns" data-bs-toggle="tooltip" data-bs-title="Natural Sciences">DSNS</label>
+
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-dsnl" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-dsnl" data-bs-toggle="tooltip" data-bs-title="Natural Science Lab">DSNL</label>
+
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-dssp" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-dssp" data-bs-toggle="tooltip" data-bs-title="Scholarship in Practice">DSSP</label>
+
+          </div>
+
+          <!-- DV** (Diversity) Gen-Ed Group -->
+          <div class="btn-group w-100 mb-2" role="group" aria-label="Filter by Diversity Gen-Ed Checkbox Group">
+
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-dvcc" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-dvcc" data-bs-toggle="tooltip" data-bs-title="Cultural Competency">DVCC</label>
+
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-dvup" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-dvup" data-bs-toggle="tooltip" data-bs-title="Understanding Plural Societies">DVUP</label>
+
+          </div>
+
+          <!-- SC** (Signature Courses) Gen-Ed Group -->
+          <div class="btn-group w-100" role="group" aria-label="Filter by Signature Courses Gen-Ed Checkbox Group">
+
+            <input type="checkbox" class="btn-check disabled" name="filter-gened-cb" id="filter-scis" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filter-scis" data-bs-toggle="tooltip" data-bs-title="I-Series">SCIS</label>
+
+          </div>
+        </div>
+
+      </div>
 
     </div>
   </div>
 
   <!-- Course Cards Div -->
-  <div class="row row-cols-1 g-4 cards-div">
-
+  <div class="row row-cols-1 g-4" id="courses-div">
 
     <% let i=0 /* Counter to access each course's sections */ %>
     <% for (let course of courses) { %>
 
-    <div class="card p-2">
+    <div class="card p-2" data-course-id="<%- course.course_id %>" 
+        data-credits="<%- course.credits %>" 
+        data-gened="<%- course.gen_ed.join() %>">
 
       <!-- Course Card Body -->
       <div class="card-body row g-0">
@@ -58,70 +215,77 @@
         <div class="col-2">
           <!-- Course ID -->
           <h2><%- course.course_id %></h2>
-          <!-- Formerly: -->
-          <% if (course.relationships.formerly) { %>
-          <i class="text-muted d-block my-3">Formerly:<br>
-            <%- course.relationships.formerly %></i>
-          <% }%>
-          <!-- Also Offered As: -->
-          <% if (course.relationships.also_offered_as) { %>
-          <i class="text-muted d-block my-3">Also Offered As:<br>
-            <%- course.relationships.also_offered_as %></i>
-          <% }%>
+
+          <div >
+            <!-- Formerly: -->
+            <% if (course.relationships.formerly) { %>
+              <i class="text-muted d-block my-3">Formerly:<br>
+              <%- course.relationships.formerly %></i>
+            <% }%>
+            <!-- Also Offered As: -->
+            <% if (course.relationships.also_offered_as) { %>
+              <i class="text-muted d-block my-3">Also Offered As:<br>
+              <%- course.relationships.also_offered_as %></i>
+            <% }%>
+          </div>
+
         </div>
 
         <!-- Course Title and Other Available Attributes (MIDDLE) -->
         <div class="col-8 pe-5 ps-5">
           <!-- Course Name -->
           <h3 class="card-title mb-4"><%- course.name %></h3>
-          <hr>
-          <!-- Grading Method: -->
-          <p><strong>Grading Method:</strong> <%- course.grading_method.join(", ") %> </p>
-          <!-- Credit Granted For: -->
-          <% if (course.relationships.credit_granted_for) { %>
-          <p><strong>Credit Granted For:</strong> <%- course.relationships.credit_granted_for %> </p>
-          <% }%>
-          <!-- Pre-requisites: -->
-          <% if (course.relationships.prereqs) { %>
-          <p><strong>Pre-requisites:</strong> <%- course.relationships.prereqs %> </p>
-          <% }%>
-          <!-- Co-requisites: -->
-          <% if (course.relationships.coreqs) { %>
-          <p><strong>Co-requisites:</strong> <%- course.relationships.coreqs %> </p>
-          <% }%>
-          <!-- Restrictions: -->
-          <% if (course.relationships.restrictions) { %>
-          <p><strong>Restrictions:</strong> <%- course.relationships.restrictions %> </p>
-          <% }%>
-          <!-- Additional Info: -->
-          <% if (course.relationships.additional_info) { %>
-          <p><strong>Additional Info:</strong> <%- course.relationships.additional_info %> </p>
-          <% }%>
+
+          <div >
+            <hr>
+            <!-- Grading Method: -->
+            <p><strong>Grading Method:</strong> <%- course.grading_method.join(", ") %> </p>
+            <!-- Credit Granted For: -->
+            <% if (course.relationships.credit_granted_for) { %>
+              <p><strong>Credit Granted For:</strong> <%- course.relationships.credit_granted_for %> </p>
+            <% }%>
+            <!-- Pre-requisites: -->
+            <% if (course.relationships.prereqs) { %>
+              <p><strong>Pre-requisites:</strong> <%- course.relationships.prereqs %> </p>
+            <% }%>
+            <!-- Co-requisites: -->
+            <% if (course.relationships.coreqs) { %>
+              <p><strong>Co-requisites:</strong> <%- course.relationships.coreqs %> </p>
+            <% }%>
+            <!-- Restrictions: -->
+            <% if (course.relationships.restrictions) { %>
+              <p><strong>Restrictions:</strong> <%- course.relationships.restrictions %> </p>
+            <% }%>
+            <!-- Additional Info: -->
+            <% if (course.relationships.additional_info) { %>
+              <p><strong>Additional Info:</strong> <%- course.relationships.additional_info %> </p>
+            <% }%>
+          </div>
         </div>
 
         <!-- Course Misc (RIGHT) -->
-        <div class=" col-2">
+        <div class="col-2">
           <!-- Credits: -->
           <div class="row mb-2">
-            <h5><strong>Credits:</strong> <%- course.credits %> </h5>
+            <h5><strong>Credits:</strong>&nbsp; <%- course.credits %></h5>
           </div>
           <!-- Gen-Ed: -->
           <% if (course.gen_ed.length !==0) { %>
           <div class="row my-2">
-            <h5><strong>Gen-Ed:</strong> <%- course.gen_ed.join(", ") %> </h5>
+            <h5><strong>Gen-Ed:</strong>&nbsp; <%- course.gen_ed.join(", ") %> </h5>
           </div>
           <% }%>
           <!-- Core: -->
           <% if (course.core.length !== 0) { %>
           <div class=" row my-2">
-            <h5><strong>Core:</strong> <%- course.core.join(", ") %> </h5>
+            <h5><strong>Core:</strong>&nbsp; <%- course.core.join(", ") %> </h5>
           </div>
           <% } %>
         </div>
       </div>
 
       <!-- Course Description in a New div -->
-      <div class="row p-2">
+      <div class="row p-2" >
         <div class="col-2 ps-4">
           <h4>Course Description</h4>
         </div>
@@ -131,24 +295,19 @@
       </div>
 
       <!-- Accordion to Display Section Information -->
-      <div class="accordion" id="course-accordion-<%- i %>">
+      <div class="accordion" id="course-accordion-<%- i %>" >
 
         <!-- Accordion Button to open Sections Div -->
         <div class="accordion-item">
           <h2 class="accordion-header" id="sections">
-            <button class="accordion-button collapsed" type="button" 
-                data-bs-toggle="collapse" data-bs-target="#course-sect-<%- i %>" 
-                aria-expanded="false" aria-controls="course-sect-<%- i %>"
-                onclick="getSections(this, '<%- i %>', '<%- course.course_id %>')">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#course-sect-<%- i %>" aria-expanded="false" aria-controls="course-sect-<%- i %>" onclick="getSections(this, '<%- i %>', '<%- course.course_id %>')">
               <h5 class="m-0 d-inline">Sections</h5>
               <div class="ms-3 d-inline loader hidden" id="loader-<%- i %>"></div>
             </button>
           </h2>
 
           <!-- Sections Div -->
-          <div id="course-sect-<%- i %>" class="accordion-collapse collapse" 
-                aria-labelledby="sections" 
-                data-bs-parent="#course-accordion-<%- i %>">
+          <div id="course-sect-<%- i %>" class="accordion-collapse collapse" aria-labelledby="sections" data-bs-parent="#course-accordion-<%- i %>">
             <!-- Sections Go In Here -->
           </div>
 
@@ -157,106 +316,16 @@
       </div>
 
     </div>
-    <% i++; %> 
+    <% i++; %>
     <% } %>
 
   </div>
 
   <script>
-
-    const delay = ms => new Promise(res => setTimeout(res, ms));
-
-    async function getSections(accordBtn, idNum, courseID) {
-      const sectionsDiv = document.getElementById(`course-sect-${idNum}`);
-      const loader = document.getElementById(`loader-${idNum}`);
-
-      loader.classList.remove('hidden');
-
-      if (sectionsDiv.innerHTML !== '') {
-        const url = '/sections?' + new URLSearchParams({ course: courseID }).toString();
-        let result = [], error = '';
-
-        await fetch(url)
-          .then((response) => response.json())
-          .then((json) => result = json)
-          .catch((e) => error = e);
-
-        if (error !== '') {
-          let div = '<div class="p-5 text-center">There was an issue retrieving sections, please try again later.</div>';
-          sectionsDiv.innerHTML = div;
-        } else if (result.sections.length !== 0) {
-          sectionsDiv.innerHTML = buildSectionsDiv(result.sections, result.favorites);
-          accordBtn.removeAttribute("onclick");
-        } else {
-          let div = '<div class="p-5 text-center">No sections to display. Contact department to register for this course.</div>';
-          sectionsDiv.innerHTML = div;
-          accordBtn.removeAttribute("onclick");
-        }
-
-      }
-      loader.classList.add('hidden');
-    }
-
-    function buildSectionsDiv(sectionsArr, favoritesArr) {
-      let res = '<div class="accordion-body">', i = 0;
-      for (let section of sectionsArr) {
-        i++;
-
-        // Section Div Body
-        res += '<div class="row g-0 p-3 ';
-        if (section.open_seats < 1) {
-          res += 'section-full"';
-        } else {
-          res += 'section-open"';
-        }
-        // Alternate between Background Colors
-        if (i % 2 !== 0) {
-          res += 'style="background-color: #F8F9FA;"';
-        }
-        res += '>';
-
-        // Section Number
-        res += `<div class="col-1 align-self-center"><h6>${section.number}</h6></div>`
-
-        // Instructor Information
-        res += `<div class="col-3 ps-3 align-self-center"><h4>${section.instructors.join(",<br>")}</h4></div>`
-
-        // Meetings
-        res += '<div class="col-5 align-self-center">';
-          section.meetings.forEach((meeting) => {
-            // Meeting Information
-            res += '<div class="row">';
-            res += `<strong class="m-0 col-4">${(meeting.classtype === "") ? 'Lecture:' : 'Discussion:'}</strong>`;
-            res += `<p class="m-0 col-8">${meeting.building} ${meeting.room} `;
-            if (meeting.days !== "") {
-              res += `(${meeting.days} : ${meeting.start_time} - ${meeting.end_time})`;
-            }
-            res += '</p></div>';
-          });
-        res += '</div>';
-
-        // Seating Information
-        res += '<div class="col-2 ps-3 align-self-center"><h6>Seats Available:</h6>';
-        res += `<h4> ${section.open_seats} / ${section.seats} </h4>`
-        if (section.open_seats < 1) {
-          res += `<h6>(${section.waitlist} in Waitlist)</h6>`
-        }
-        res += '</div>';
-
-        // Favorite Button
-        res += '<div class="col-1 align-self-center ps-3"><button class="fav-button">';
-        res += '<i class="fa-solid fa-star fav-star ps-3';
-        if (favoritesArr.some((s) => (s.section === section.number))) {
-          res += 'fav-checked';
-        }
-        res += `" onclick="handleFav(this, '${section.section_id}')"></i>`
-        res += '</button></div></div>';
-      }
-      res += '</div>';
-      return res;
-    }
-
+    
   </script>
+  <script src="scripts/suggestions.js"></script>
+  <script src="scripts/courseBuilder.js"></script>
   <script src="scripts/favorites.js"></script>
 
 </body>
