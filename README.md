@@ -40,7 +40,9 @@ The project aims to improve this interface such that it is able to reflect the g
 
 <img src="public/screenshots/search-bar-home-page.png" alt="Search Bar at Home Page" width="400">
 
-By entering a properly formatted Course ID (`DEPTNNN`), users will be able to see more information about each specific course, from the course description, credits, and restrictions that students should know about; to the sections available, seating availability, and meeting locations.
+The website retrieves results based on the user's search query. This must be a keyword related to the full course name. For example, typing in `CMSC` will show all the courses provided by the UMD Computer Science department, and typing in `engineering` will show all courses that has the keyword 'engineering' in its name.
+
+The user will then be redirected to another page where they are able to see more information about each specific course, from the course description, credits, and restrictions that students should know about; to the sections available, seating availability, and meeting locations.
 
 <img src="public/screenshots/search-results.png" alt="Search Results" width="500">
 
@@ -79,13 +81,9 @@ And of course, to the people that collaborated into this project:
 
 ### Known Issues
 
-1. At this point, courses searched must be a valid course. Entering them partially into the search bar will return a `400` bad request error code, as there is no middle-man between the form and the API. In the future, we will be looking into changing our back-end architecture to support this feature.
+1. Home page is very icky right now. There is a lot to do about the design to make it even more beautiful.
 
-2. The time it takes for a course to be saved may vary. At times, the star will turn gold as quick as `100`ms, but in others, it may take up to `78000`ms.
-
-3. Home page is very icky right now.
-
-4. Course search results may be out of sync with Testudo. This might be an issue with UMD.IO's scraper [github.com/umdio/umdio/issues/241](https://github.com/umdio/umdio/issues/241).
+2. Course search results may be out of sync with Testudo. This might be an issue with UMD.IO's scraper [github.com/umdio/umdio/issues/241](https://github.com/umdio/umdio/issues/241).
 
 ---
 
