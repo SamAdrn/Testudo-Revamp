@@ -49,8 +49,12 @@
     <i class="fa-solid fa-circle-chevron-left offcanvas-btn p-1 ms-3 sticky-top"></i>
   </div>
 
+  <!-- <div class="offcanvas-btn offcanvas-btn-end px-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sort-filter-offcanvas" aria-controls="offcanvasScrolling">
+    <i class="fa-solid fa-filter"></i>
+  </div> -->
+
   <!-- Sort/Filter Sidebar (sort-filter-offcanvas) -->
-  <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="true" tabindex="-1" id="sort-filter-offcanvas" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas offcanvas-end" data-bs-backdrop="true" tabindex="-1" id="sort-filter-offcanvas" aria-labelledby="offcanvasScrollingLabel">
     <div class="offcanvas-header">
       <h3 class="offcanvas-title" id="offcanvasScrollingLabel">Sort / Filter</h3>
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -85,22 +89,22 @@
 
         <div class="card-body">
           <div class="btn-group w-100" role="group" aria-label="Filter by Credits Checkbox Group">
-            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-1" autocomplete="off" checked>
+            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-1" autocomplete="off">
             <label class="btn btn-outline-primary" for="filter-credits-1">1</label>
 
-            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-2" autocomplete="off" checked>
+            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-2" autocomplete="off">
             <label class="btn btn-outline-primary" for="filter-credits-2">2</label>
 
-            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-3" autocomplete="off" checked>
+            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-3" autocomplete="off">
             <label class="btn btn-outline-primary" for="filter-credits-3">3</label>
 
-            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-4" autocomplete="off" checked>
+            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-4" autocomplete="off">
             <label class="btn btn-outline-primary" for="filter-credits-4">4</label>
 
-            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-5" autocomplete="off" checked>
+            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-5" autocomplete="off">
             <label class="btn btn-outline-primary" for="filter-credits-5">5</label>
 
-            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-6" autocomplete="off" checked>
+            <input type="checkbox" class="btn-check" name="filter-credits-cb" id="filter-credits-6" autocomplete="off">
             <label class="btn btn-outline-primary" for="filter-credits-6">6</label>
 
             <input type="checkbox" class="btn-check" id="deselect-filter-credits" autocomplete="off">
@@ -136,61 +140,134 @@
           <!-- FS** (Fundamental Studies) Gen-Ed Group -->
           <div class="btn-group w-100 mb-2" role="group" aria-label="Filter by Fundamental Studies Gen-Ed Checkbox Group">
 
-            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-fsaw" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="filter-fsaw" data-bs-toggle="tooltip" data-bs-title="Academic Writing">FSAW</label>
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-gened-fsaw" autocomplete="off">
+            <label class="btn btn-outline-primary" for="filter-gened-fsaw" data-bs-toggle="tooltip" data-bs-title="Academic Writing">FSAW</label>
 
-            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-fsar" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="filter-fsar" data-bs-toggle="tooltip" data-bs-title="Analytic Reasoning">FSAR</label>
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-gened-fsar" autocomplete="off">
+            <label class="btn btn-outline-primary" for="filter-gened-fsar" data-bs-toggle="tooltip" data-bs-title="Analytic Reasoning">FSAR</label>
 
-            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-fsma" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="filter-fsma" data-bs-toggle="tooltip" data-bs-title="Math">FSMA</label>
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-gened-fsma" autocomplete="off">
+            <label class="btn btn-outline-primary" for="filter-gened-fsma" data-bs-toggle="tooltip" data-bs-title="Math">FSMA</label>
 
-            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-fsow" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="filter-fsow" data-bs-toggle="tooltip" data-bs-title="Oral Communications">FSOC</label>
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-gened-fsoc" autocomplete="off">
+            <label class="btn btn-outline-primary" for="filter-gened-fsoc" data-bs-toggle="tooltip" data-bs-title="Oral Communications">FSOC</label>
 
-            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-fspw" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="filter-fspw" data-bs-toggle="tooltip" data-bs-title="Professional Writing">FSPW</label>
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-gened-fspw" autocomplete="off">
+            <label class="btn btn-outline-primary" for="filter-gened-fspw" data-bs-toggle="tooltip" data-bs-title="Professional Writing">FSPW</label>
 
           </div>
 
           <!-- DS** (Distributive Studies) Gen-Ed Group -->
           <div class="btn-group w-100 mb-2" role="group" aria-label="Filter by Distributive Studies Gen-Ed Checkbox Group">
 
-            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-dshs" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="filter-dshs" data-bs-toggle="tooltip" data-bs-title="History and Social Sciences">DSHS</label>
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-gened-dshs" autocomplete="off">
+            <label class="btn btn-outline-primary" for="filter-gened-dshs" data-bs-toggle="tooltip" data-bs-title="History and Social Sciences">DSHS</label>
 
-            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-dshu" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="filter-dshu" data-bs-toggle="tooltip" data-bs-title="Humanities">DSHU</label>
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-gened-dshu" autocomplete="off">
+            <label class="btn btn-outline-primary" for="filter-gened-dshu" data-bs-toggle="tooltip" data-bs-title="Humanities">DSHU</label>
 
-            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-dsns" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="filter-dsns" data-bs-toggle="tooltip" data-bs-title="Natural Sciences">DSNS</label>
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-gened-dsns" autocomplete="off">
+            <label class="btn btn-outline-primary" for="filter-gened-dsns" data-bs-toggle="tooltip" data-bs-title="Natural Sciences">DSNS</label>
 
-            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-dsnl" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="filter-dsnl" data-bs-toggle="tooltip" data-bs-title="Natural Science Lab">DSNL</label>
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-gened-dsnl" autocomplete="off">
+            <label class="btn btn-outline-primary" for="filter-gened-dsnl" data-bs-toggle="tooltip" data-bs-title="Natural Science Lab">DSNL</label>
 
-            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-dssp" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="filter-dssp" data-bs-toggle="tooltip" data-bs-title="Scholarship in Practice">DSSP</label>
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-gened-dssp" autocomplete="off">
+            <label class="btn btn-outline-primary" for="filter-gened-dssp" data-bs-toggle="tooltip" data-bs-title="Scholarship in Practice">DSSP</label>
 
           </div>
 
           <!-- DV** (Diversity) Gen-Ed Group -->
           <div class="btn-group w-100 mb-2" role="group" aria-label="Filter by Diversity Gen-Ed Checkbox Group">
 
-            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-dvcc" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="filter-dvcc" data-bs-toggle="tooltip" data-bs-title="Cultural Competency">DVCC</label>
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-gened-dvcc" autocomplete="off">
+            <label class="btn btn-outline-primary" for="filter-gened-dvcc" data-bs-toggle="tooltip" data-bs-title="Cultural Competency">DVCC</label>
 
-            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-dvup" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="filter-dvup" data-bs-toggle="tooltip" data-bs-title="Understanding Plural Societies">DVUP</label>
+            <input type="checkbox" class="btn-check" name="filter-gened-cb" id="filter-gened-dvup" autocomplete="off">
+            <label class="btn btn-outline-primary" for="filter-gened-dvup" data-bs-toggle="tooltip" data-bs-title="Understanding Plural Societies">DVUP</label>
 
           </div>
 
           <!-- SC** (Signature Courses) Gen-Ed Group -->
           <div class="btn-group w-100" role="group" aria-label="Filter by Signature Courses Gen-Ed Checkbox Group">
 
-            <input type="checkbox" class="btn-check disabled" name="filter-gened-cb" id="filter-scis" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="filter-scis" data-bs-toggle="tooltip" data-bs-title="I-Series">SCIS</label>
+            <input type="checkbox" class="btn-check disabled" name="filter-gened-cb" id="filter-gened-scis" autocomplete="off">
+            <label class="btn btn-outline-primary" for="filter-gened-scis" data-bs-toggle="tooltip" data-bs-title="I-Series">SCIS</label>
 
           </div>
+        </div>
+
+      </div>
+
+      <!-- Filter for Sections Div -->
+      <div class="card mb-4">
+
+        <div class="card-header">
+          <h5 class="pt-2 d-inline">Apply Filters Across Sections</h5>&nbsp;
+          <i class="fa-solid fa-circle-question d-inline align-items-middle" data-bs-toggle="tooltip" data-bs-title="These filters will be applied across all courses and 
+            their respective sections to show more relevant information.
+            Make sure to hit that 'Apply' button to make changes."></i>
+        </div>
+
+        <div class="card-body">
+
+          <button class="btn btn-outline-primary w-100 mb-2" id="reset-filter-sections-global">Reset</button>
+
+          <div class="btn-group w-100 mb-2" role="group" aria-label="Global Filter for Open Sections">
+            <input type="checkbox" class="btn-check" id="section-filter-open-global" autocomplete="off">
+            <label class="btn btn-outline-primary" for="section-filter-open-global" data-bs-toggle="tooltip" data-bs-title="Only show Open Sections">
+              Show Open Sections Only
+            </label>
+          </div>
+
+          <div class="btn-group w-100 mb-2" role="group" aria-label="Global Filters for Section Days">
+
+            <input type="checkbox" class="btn-check" name="section-global-filter-days-cb" id="section-filter-m-global" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="section-filter-m-global">M</label>
+
+            <input type="checkbox" class="btn-check" name="section-global-filter-days-cb" id="section-filter-tu-global" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="section-filter-tu-global">Tu</label>
+
+            <input type="checkbox" class="btn-check" name="section-global-filter-days-cb" id="section-filter-w-global" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="section-filter-w-global">W</label>
+
+            <input type="checkbox" class="btn-check" name="section-global-filter-days-cb" id="section-filter-th-global" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="section-filter-th-global">Th</label>
+
+            <input type="checkbox" class="btn-check" name="section-global-filter-days-cb" id="section-filter-f-global" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="section-filter-f-global">F</label>
+
+          </div>
+
+          <div class="btn-group w-100 mb-2" role="group" aria-label="Global Filters for Section Times">
+
+            <select class="form-select d-inline ps-3 me-1" id="section-filter-time-start-global" aria-label="Select End Start Range">
+              <option value="5:00am" selected>Start Time</option>
+              <%- include('partials/time') %>
+            </select>
+
+            <select class="form-select d-inline ps-3 ms-1" id="section-filter-time-end-global" aria-label="Select End Time Range">
+              <option value="11:30pm" selected>End Time</option>
+              <%- include('partials/time') %>
+            </select>
+
+          </div>
+
+          <div class="btn-group w-100 mb-2" role="group" aria-label="Global Filters for Section Delivery Types">
+
+            <input type="checkbox" class="btn-check" name="section-global-filter-deliver-cb" id="section-filter-f2f-global" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="section-filter-f2f-global" data-bs-toggle="tooltip" data-bs-title="Face-to-Face">F2F</label>
+
+            <input type="checkbox" class="btn-check" name="section-global-filter-deliver-cb" id="section-filter-ble-global" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="section-filter-ble-global" data-bs-toggle="tooltip" data-bs-title="Blended Learning">Blend</label>
+
+            <input type="checkbox" class="btn-check" name="section-global-filter-deliver-cb" id="section-filter-onl-global" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="section-filter-onl-global" data-bs-toggle="tooltip" data-bs-title="Online">On</label>
+
+          </div>
+
+          <button class="btn btn-outline-primary w-100 mt-2" id="btn-apply-global-sect-filters">Apply</button>
+
         </div>
 
       </div>
@@ -198,15 +275,22 @@
     </div>
   </div>
 
+
   <!-- Course Cards Div -->
-  <div class="row row-cols-1 g-4" id="courses-div">
+  <div class="row row-cols-1 g-4 mb-5" id="courses-div">
+
+    <% if (courses.length === 0) { %>
+
+    <div class="mt-5 p-5 text-center fs-4">
+      Unfortunately, there are no courses to show for "<strong><%- search %></strong>".
+    </div>
+
+    <% } else { %>
 
     <% let i=0 /* Counter to access each course's sections */ %>
     <% for (let course of courses) { %>
 
-    <div class="card p-2" data-course-id="<%- course.course_id %>" 
-        data-credits="<%- course.credits %>" 
-        data-gened="<%- course.gen_ed.join() %>">
+    <div class="card p-2" data-course-id="<%- course.course_id %>" data-credits="<%- course.credits %>" data-gened="<%- course.gen_ed.join() %>">
 
       <!-- Course Card Body -->
       <div class="card-body row g-0">
@@ -214,17 +298,17 @@
         <!-- Course ID and other Naming Information (LEFT) -->
         <div class="col-2">
           <!-- Course ID -->
-          <h2><%- course.course_id %></h2>
+          <h3><%- course.course_id %></h3>
 
-          <div >
+          <div>
             <!-- Formerly: -->
             <% if (course.relationships.formerly) { %>
-              <i class="text-muted d-block my-3">Formerly:<br>
+            <i class="text-muted d-block my-3">Formerly:<br>
               <%- course.relationships.formerly %></i>
             <% }%>
             <!-- Also Offered As: -->
             <% if (course.relationships.also_offered_as) { %>
-              <i class="text-muted d-block my-3">Also Offered As:<br>
+            <i class="text-muted d-block my-3">Also Offered As:<br>
               <%- course.relationships.also_offered_as %></i>
             <% }%>
           </div>
@@ -236,29 +320,29 @@
           <!-- Course Name -->
           <h3 class="card-title mb-4"><%- course.name %></h3>
 
-          <div >
+          <div>
             <hr>
             <!-- Grading Method: -->
             <p><strong>Grading Method:</strong> <%- course.grading_method.join(", ") %> </p>
             <!-- Credit Granted For: -->
             <% if (course.relationships.credit_granted_for) { %>
-              <p><strong>Credit Granted For:</strong> <%- course.relationships.credit_granted_for %> </p>
+            <p><strong>Credit Granted For:</strong> <%- course.relationships.credit_granted_for %> </p>
             <% }%>
             <!-- Pre-requisites: -->
             <% if (course.relationships.prereqs) { %>
-              <p><strong>Pre-requisites:</strong> <%- course.relationships.prereqs %> </p>
+            <p><strong>Pre-requisites:</strong> <%- course.relationships.prereqs %> </p>
             <% }%>
             <!-- Co-requisites: -->
             <% if (course.relationships.coreqs) { %>
-              <p><strong>Co-requisites:</strong> <%- course.relationships.coreqs %> </p>
+            <p><strong>Co-requisites:</strong> <%- course.relationships.coreqs %> </p>
             <% }%>
             <!-- Restrictions: -->
             <% if (course.relationships.restrictions) { %>
-              <p><strong>Restrictions:</strong> <%- course.relationships.restrictions %> </p>
+            <p><strong>Restrictions:</strong> <%- course.relationships.restrictions %> </p>
             <% }%>
             <!-- Additional Info: -->
             <% if (course.relationships.additional_info) { %>
-              <p><strong>Additional Info:</strong> <%- course.relationships.additional_info %> </p>
+            <p><strong>Additional Info:</strong> <%- course.relationships.additional_info %> </p>
             <% }%>
           </div>
         </div>
@@ -285,7 +369,7 @@
       </div>
 
       <!-- Course Description in a New div -->
-      <div class="row p-2" >
+      <div class="row p-2">
         <div class="col-2 ps-4">
           <h4>Course Description</h4>
         </div>
@@ -295,7 +379,7 @@
       </div>
 
       <!-- Accordion to Display Section Information -->
-      <div class="accordion" id="course-accordion-<%- i %>" >
+      <div class="accordion" id="course-accordion-<%- i %>">
 
         <!-- Accordion Button to open Sections Div -->
         <div class="accordion-item">
@@ -307,8 +391,119 @@
           </h2>
 
           <!-- Sections Div -->
-          <div id="course-sect-<%- i %>" class="accordion-collapse collapse" aria-labelledby="sections" data-bs-parent="#course-accordion-<%- i %>">
-            <!-- Sections Go In Here -->
+          <div id="course-sect-<%- i %>" class="accordion-collapse collapse" aria-labelledby="sections" data-bs-parent="#course-accordion-<%- i %>" data-sections-avai="false">
+
+            <!-- Filter Toolbar for Sections -->
+            <div class="px-auto pt-3 text-center" id="section-filter-toolbar-<%- i %>" hidden>
+
+              <span name="section-filter-hidden" id="trigger-section-<%- i %>" data-target="<%- i %>" hidden></span>
+
+              <div class="btn-group btn-group-sm" role="group" aria-label="Filter for Open Sections">
+
+                <input type="checkbox" class="btn-check" name="section-filter-open-cb" id="section-filter-open-<%- i %>" data-target="<%- i %>" autocomplete="off">
+                <label class="btn btn-outline-primary" for="section-filter-open-<%- i %>" data-bs-toggle="tooltip" data-bs-title="Only show Open Sections">
+                  <span class="d-none d-xl-block">Open Sections</span>
+                  <span class="d-xl-none">Open</span>
+                </label>
+
+              </div>
+
+              <div class="ms-3 btn-group btn-group-sm" role="group" aria-label="Filter for Section Days">
+
+                <input type="checkbox" class="btn-check" name="section-filter-days-cb" id="section-filter-m-<%- i %>" data-target="<%- i %>" autocomplete="off">
+                <label class="btn btn-outline-primary" for="section-filter-m-<%- i %>">M</label>
+
+                <input type="checkbox" class="btn-check" name="section-filter-days-cb" id="section-filter-tu-<%- i %>" data-target="<%- i %>" autocomplete="off">
+                <label class="btn btn-outline-primary" for="section-filter-tu-<%- i %>">Tu</label>
+
+                <input type="checkbox" class="btn-check" name="section-filter-days-cb" id="section-filter-w-<%- i %>" data-target="<%- i %>" autocomplete="off">
+                <label class="btn btn-outline-primary" for="section-filter-w-<%- i %>">W</label>
+
+                <input type="checkbox" class="btn-check" name="section-filter-days-cb" id="section-filter-th-<%- i %>" data-target="<%- i %>" autocomplete="off">
+                <label class="btn btn-outline-primary" for="section-filter-th-<%- i %>">Th</label>
+
+                <input type="checkbox" class="btn-check" name="section-filter-days-cb" id="section-filter-f-<%- i %>" data-target="<%- i %>" autocomplete="off">
+                <label class="btn btn-outline-primary" for="section-filter-f-<%- i %>">F</label>
+
+              </div>
+
+              <div class="ms-3 d-inline h-100" role="group" aria-label="Filter for Section Times">
+                <span class="d-none d-xl-inline">Between :</span>
+                <span class="d-xl-none">Btw :</span>
+
+                <select class="form-select-sm d-inline ps-1" name="section-filter-time-start-sel" id="section-filter-time-start-<%- i %>" data-target="<%- i %>" aria-label="Select End Start Range">
+                  <%- include('partials/time') %>
+                </select>
+
+                &mdash;
+
+                <select class="form-select-sm d-inline ps-1" name="section-filter-time-end-sel" id="section-filter-time-end-<%- i %>" data-target="<%- i %>" aria-label="Select End Time Range">
+                  <%- include('partials/time') %>
+                </select>
+
+              </div>
+
+              <div class="ms-3 btn-group btn-group-sm" role="group" aria-label="Filter for Section Delivery Types">
+
+                <input type="checkbox" class="btn-check" name="section-filter-deliver-cb" id="section-filter-f2f-<%- i %>" data-target="<%- i %>" autocomplete="off">
+                <label class="btn btn-outline-primary" for="section-filter-f2f-<%- i %>">
+                  <span class="d-none d-lg-block">Face-to-Face</span>
+                  <span class="d-lg-none" data-bs-toggle="tooltip" data-bs-title="Face-to-Face">F2F</span>
+                </label>
+
+                <input type="checkbox" class="btn-check" name="section-filter-deliver-cb" id="section-filter-ble-<%- i %>" data-target="<%- i %>" autocomplete="off">
+                <label class="btn btn-outline-primary" for="section-filter-ble-<%- i %>">
+                  <span class="d-none d-lg-block">Blended Learning</span>
+                  <span class="d-lg-none" data-bs-toggle="tooltip" data-bs-title="Blended Learning">Blend</span>
+                </label>
+
+                <input type="checkbox" class="btn-check" name="section-filter-deliver-cb" id="section-filter-onl-<%- i %>" data-target="<%- i %>" autocomplete="off">
+                <label class="btn btn-outline-primary" for="section-filter-onl-<%- i %>">
+                  <span class="d-none d-lg-block">Online</span>
+                  <span class="d-lg-none" data-bs-toggle="tooltip" data-bs-title="Online">On</span>
+                </label>
+
+              </div>
+
+              <button class="btn btn-outline-primary btn-sm ms-3" id="reset-filter-sections-<%- i %>" data-target="<%- i %>">
+                <span class="d-none d-lg-block">Reset</span>
+                 <span class="d-lg-none" data-bs-toggle="tooltip" data-bs-title="Reset Filters">R</span>
+              </button>
+
+            </div>
+
+            <!-- Sections Go in Here -->
+            <div class="row g-0 p-3 section-open placeholder-glow" id="section-placeholder-<%- i %>" style="background-color: #F8F9FA;">
+
+              <div class="col-1 align-self-center">
+                <span class="placeholder pe-5 mb-3"></span>
+              </div>
+
+              <div class="col-3 align-self-center">
+                <h4><span class="placeholder w-75"></span></h4>
+              </div>
+
+              <div class="col-5 ps-3 align-self-center">
+
+                <div class="row">
+                  <span class="placeholder w-75 mb-3"></span>
+                </div>
+                <div class="row">
+                  <span class="placeholder w-75"></span>
+                </div>
+
+
+              </div>
+
+              <div class="col-2 ps-3 align-self-center">
+                <h6><span class="placeholder w-50"></span></h6>
+                <h4><span class="placeholder w-50 "></span></h4>
+              </div>
+
+              <div class="col-1 align-self-center ps-3">
+                <i class="fa-solid fa-star fav-star ps-3"></i>
+              </div>
+            </div>
           </div>
 
         </div>
@@ -318,11 +513,12 @@
     </div>
     <% i++; %>
     <% } %>
+    <% } %>
 
   </div>
 
   <script>
-    
+
   </script>
   <script src="scripts/suggestions.js"></script>
   <script src="scripts/courseBuilder.js"></script>

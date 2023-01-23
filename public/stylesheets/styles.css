@@ -2,31 +2,38 @@
 
 body {
     margin: 0;
+    min-width: 900px;
+    width: auto !important; /* Firefox will set width as auto */
+    width: 900px; /* As IE6 ignores !important it will set width as 900px; */
 }
 
 .btn-primary {
-    background-color: #e21833;
-    border: 0;
-}
+    --bs-btn-bg: #e21833;
+    --bs-btn-border-color: #e21833;
 
-.btn-primary:hover {
-    background-color: #ffd200;
-    color: black;
-    border: 0;
-}
+    --bs-btn-active-bg: #e21833;
+    --bs-btn-active-border-color: #e21833;
 
-.btn-primary:active {
-    background-color: white;
-    color: black;
-    border: 0;
+    --bs-btn-hover-color: black;
+    --bs-btn-hover-bg: #ffd200;
+    --bs-btn-hover-border-color: #ffd200;
 }
 
 .btn-outline-primary {
     --bs-btn-color: #e21833;
     --bs-btn-border-color: #e21833;
-    
+
     --bs-btn-active-bg: #e21833;
     --bs-btn-active-border-color: #e21833;
+
+    --bs-btn-hover-color: black;
+    --bs-btn-hover-bg: #ffd200;
+    --bs-btn-hover-border-color: #ffd200;
+}
+
+.btn-outline-primary:disabled {
+    --bs-btn-color: gray;
+    --bs-btn-border-color: gray;
 }
 
 .navbar {
@@ -63,7 +70,8 @@ body {
     text-align: left;
 }
 
-#course-input-sug, #major-sug {
+#course-input-sug,
+#major-sug {
     border: 1px dotted #ccc;
     padding: 3px;
     z-index: 100;
@@ -73,17 +81,20 @@ body {
     font-size: 1rem;
 }
 
-#course-input-sug ul, #major-sug ul {
+#course-input-sug ul,
+#major-sug ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-#course-input-sug ul li, #major-sug ul li {
+#course-input-sug ul li,
+#major-sug ul li {
     padding: 5px 0;
 }
 
-#course-input-sug ul li:hover, #major-sug ul li:hover {
+#course-input-sug ul li:hover,
+#major-sug ul li:hover {
     background: #eee;
 }
 
@@ -150,19 +161,42 @@ body {
 .offcanvas-btn {
     top: 50%;
     position: fixed;
-    font-size: 3rem;
+    font-size: 2.5rem;
+    border-radius: 50%;
 }
 
 .offcanvas-btn:hover {
     color: #ffd200;
 }
 
-.fa-circle-chevron-left {
+.fa-circle-chevron-left,
+.offcanvas-btn-end {
     right: 10px;
 }
 
 #courses-div {
     margin: 1% 6%;
+}
+
+[id^="reset-filter-sections-"] {
+    --bs-btn-color: #ff7b00;
+    --bs-btn-border-color: #ff9500;
+
+    --bs-btn-active-bg: #ff9500;
+    --bs-btn-active-border-color: #ff9500;
+
+    --bs-btn-hover-color: black;
+    --bs-btn-hover-bg: #ffd200;
+    --bs-btn-hover-border-color: #ffd200;
+}
+
+label[for^="section-filter-open-"] {
+    --bs-btn-active-bg: #38b000;
+    --bs-btn-active-border-color: #38b000;
+}
+
+select {
+    border-color: #e21833;
 }
 
 .section-open {
