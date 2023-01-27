@@ -190,6 +190,8 @@ $(document).ready(function () {
 
         applyGlobalFilters();
     });
+
+    $('.accordion-button').trigger('click');
 });
 
 // Event Listeners to fire for any changes throughout the document
@@ -532,7 +534,7 @@ function buildSectionsDiv(sections, favs, id) {
             ].join('');
         }
     })
-    return [`<div class="accordion-body" id="sections-${id}" hidden> ${res} </div>`, stats];
+    return [`<div class="mt-3" id="sections-${id}" hidden> ${res} </div>`, stats];
 }
 
 function initSections(id, stats) {
@@ -586,7 +588,7 @@ function initSections(id, stats) {
 function sortFilterSections(id) {
     console.log(id);
     let alert = [
-        '<div class="alert alert-warning text-center mt-2" role="alert">',
+        '<div class="alert alert-warning text-center m-2" role="alert">',
         `   <div>Sorry, no courses to display based on current filter. Try resetting them to show more results.</div>`,
         "</div>",
     ].join("");

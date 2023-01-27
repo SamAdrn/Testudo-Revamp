@@ -52,6 +52,9 @@ console.log(`Web server started and running at http://localhost:${portNumber}`);
 
 // Include the MongoDB driver for Node.js
 const { MongoClient, ServerApiVersion } = require("mongodb");
+const { isReadable } = require("stream");
+const { getHeapCodeStatistics } = require("v8");
+const { json } = require("body-parser");
 
 /* Object to store details related to our databse */
 const mongo = {
@@ -60,7 +63,8 @@ const mongo = {
     dbName: process.env.MONGO_DB_NAME,
     coursesCol: process.env.MONGO_DB_COURSES,
     favoritesCol: process.env.MONGO_DB_FAVORITES,
-    majorsCol: process.env.MONGO_DB_MAJORS
+    majorsCol: process.env.MONGO_DB_MAJORS,
+    deptsCol: process.env.MONGO_DB_DEPARTMENTS,
 };
 
 // Establish a connection to our database
@@ -78,6 +82,11 @@ const client = new MongoClient(uri, {
 // Show index.ejs in GET request to root page
 app.get("/", (req, res) => {
     res.render("index");
+});
+
+// Show depts.ejs in GET request to /depts
+app.get("/depts", (req, res) => {
+    res.render("depts");
 });
 
 // Perform search for POST request to /search
@@ -99,15 +108,32 @@ app.post("/search", async (req, res) => {
             // Else, for any other various forms
             re = new RegExp(searchInp, "i");
 
-            const cursor = client
+            // Check if search matches a department ID
+            const deptSearch = client
                 .db(mongo.dbName)
-                .collection(mongo.coursesCol)
-                .find({
-                    $or: [
-                        { course_id: { $regex: re } },
-                        { name: { $regex: re } },
-                    ],
-                });
+                .collection(mongo.deptsCol)
+                .count({ dept_id: { $regex: re } });
+
+            let cursor;
+
+            if (searchInp.length === 4 && (await deptSearch) > 0) {
+                // Find all courses under a department if available
+                cursor = client
+                    .db(mongo.dbName)
+                    .collection(mongo.coursesCol)
+                    .find({ course_id: { $regex: re } });
+            } else {
+                // Find all courses that matches search input
+                cursor = client
+                    .db(mongo.dbName)
+                    .collection(mongo.coursesCol)
+                    .find({
+                        $or: [
+                            { course_id: { $regex: re } },
+                            { name: { $regex: re } },
+                        ],
+                    });
+            }
 
             // Retrieve all courses IDs matching the search criterias
             try {
@@ -126,23 +152,30 @@ app.post("/search", async (req, res) => {
         }
 
         // Retrieve all course information
-        await fetch(url)
-            .then((response) => response.json())
-            .then((coursesArr) => {
-                if (coursesArr.error_code === 404) {
-                    throw new Error(`404 - ${coursesArr.message}`);
-                }
-                console.log(coursesArr);
-                res.render("courses", {
-                    courses: coursesArr,
-                });
-            })
-            .catch((e) =>
-                res.render("error", {
-                    info: `GET to ${url}`,
-                    error: e,
+        if (api != url) {
+            await fetch(url)
+                .then((response) => response.json())
+                .then((coursesArr) => {
+                    if (coursesArr.error_code === 404) {
+                        throw new Error(`404 - ${coursesArr.message}`);
+                    }
+                    // console.log(coursesArr);
+                    res.render("courses", {
+                        courses: coursesArr,
+                    });
                 })
-            );
+                .catch((e) =>
+                    res.render("error", {
+                        info: `GET to ${url}`,
+                        error: e,
+                    })
+                );
+        } else {
+            res.render("courses", {
+                courses: [],
+                search: searchInp,
+            });
+        }
     } catch (e) {
         res.render("error", {
             info: `FAILED to connect to DB CLIENT or FATAL ERROR has occurred`,
@@ -333,7 +366,7 @@ async function queryDatabaseForCourses() {
         // Get all Course IDs and Course Names and store it into MongoDB
         const urlCourse = "https://api.umd.io/v1/courses/list";
 
-        console.log('getting courses');
+        console.log("getting courses");
 
         await fetch(urlCourse)
             .then((response) => response.json())
@@ -354,12 +387,12 @@ async function queryDatabaseForCourses() {
             })
             .catch((error) => console.log(error));
 
-        console.log('courses done');
+        console.log("courses done");
 
         // Get all Majors and store it into MongoDB
         const urlMajor = "https://api.umd.io/v1/majors/list";
 
-        console.log('getting majors');
+        console.log("getting majors");
 
         await fetch(urlMajor)
             .then((response) => response.json())
@@ -382,7 +415,7 @@ async function queryDatabaseForCourses() {
             })
             .catch((error) => console.log(error));
 
-        console.log('majors done');
+        console.log("majors done");
     } catch (e) {
         console.log(e);
     } finally {
@@ -395,3 +428,35 @@ async function queryDatabaseForCourses() {
 // { name: { $regex: /Writing/ } }
 
 // queryDatabaseForCourses();
+
+async function readDepts() {
+    fs.readFile("departments.json", "utf8", async (err, jsonString) => {
+        if (err) {
+            console.log("File read failed:", err);
+            return;
+        }
+        let depts = JSON.parse(jsonString);
+
+        try {
+            await client.connect();
+
+            await client
+                .db(mongo.dbName)
+                .collection(mongo.deptsCol)
+                .deleteMany();
+
+            await client
+                .db(mongo.dbName)
+                .collection(mongo.deptsCol)
+                .insertMany(depts);
+
+            console.log("depts done");
+        } catch (e) {
+            console.log(e);
+        } finally {
+            client.close();
+        }
+    });
+}
+
+// readDepts();
